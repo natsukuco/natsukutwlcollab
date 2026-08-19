@@ -5,14 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Natsuku × ThroughWebbedLens | Photo &amp; Film Rate Card 2026–2027</title>
-<meta name="description" content="Joint wedding photography and film packages from Natsuku and ThroughWebbedLens. Combo packages from $1,020, standalone photography from $828, standalone film from $880. Build your own estimate.">
+<meta name="description" content="Answer a few questions and we'll recommend the wedding photography and film package that fits your day. Combo packages from $1,020, photography from $828, film from $880.">
 <meta name="keywords" content="Wedding Photography Singapore, Wedding Videography, Natsuku, ThroughWebbedLens, Combo Wedding Package, Hitcheed Showcase">
 <meta name="author" content="Natsuku Photography">
 <meta name="theme-color" content="#4a544c">
 <link rel="icon" href="https://natsukuco.github.io/interactiveratecard/Natsuku%20Logo-09.png">
 
 <meta property="og:title" content="Natsuku × ThroughWebbedLens | Photo &amp; Film Rate Card">
-<meta property="og:description" content="Photography and film, together or on their own. Explore packages, build your estimate, and see the journey from hello to high-res.">
+<meta property="og:description" content="A few questions, and we'll point you to the package that fits your day.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://natsuku.co">
 <meta property="og:image" content="https://natsukuco.github.io/interactiveratecard/Natsuku%20Logo-09.png">
@@ -79,99 +79,55 @@
     .reveal { opacity: 0; transform: translateY(16px); }
     .reveal.is-in { opacity: 1; transform: none; transition: opacity .8s ease, transform .8s cubic-bezier(.16,1,.3,1); }
 
-    /* Package cards */
-    .pkg-card { transition: transform .45s cubic-bezier(.16,1,.3,1), box-shadow .45s ease, border-color .45s ease; }
-    .pkg-card:hover { transform: translateY(-6px); box-shadow: 0 24px 40px -24px rgba(74,84,76,.35); border-color: #cdd4cd; }
-    .pkg-card.is-featured { border-color: var(--sage); box-shadow: 0 24px 40px -28px rgba(74,84,76,.45); }
-    .pkg-card.is-matched { border-color: var(--sage); box-shadow: 0 0 0 1px var(--sage), 0 24px 40px -24px rgba(74,84,76,.4); }
-    .pkg-body { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .45s cubic-bezier(.16,1,.3,1), opacity .3s ease; opacity: 0; }
-    .pkg-body > div { overflow: hidden; }
-    .pkg-card.is-open .pkg-body { grid-template-rows: 1fr; opacity: 1; }
-    .pkg-card.is-open .pkg-toggle-icon { transform: rotate(45deg); }
-    .pkg-toggle-icon { transition: transform .4s cubic-bezier(.16,1,.3,1); }
+    /* ---- The questionnaire ---------------------------------------------- */
+    #quiz-stage { animation: riseIn .45s cubic-bezier(.16,1,.3,1) both; }
 
-    /* Range slider */
-    input[type=range].hour-range {
-        -webkit-appearance: none; appearance: none; width: 100%; height: 2px;
-        background: var(--mist); border-radius: 999px; outline: none; cursor: pointer;
+    .opt {
+        display: block; width: 100%; text-align: left;
+        padding: 1.25rem 1.35rem; border: 1px solid #e2e0d8; border-radius: 1.25rem;
+        background: #fff; cursor: pointer;
+        transition: border-color .25s ease, background-color .25s ease, transform .25s cubic-bezier(.16,1,.3,1);
     }
-    input[type=range].hour-range::-webkit-slider-thumb {
-        -webkit-appearance: none; appearance: none; width: 26px; height: 26px; border-radius: 50%;
-        background: var(--sage); border: 4px solid #f7f4ed; cursor: grab;
-        box-shadow: 0 2px 10px rgba(74,84,76,.45); transition: transform .2s ease;
-    }
-    input[type=range].hour-range::-webkit-slider-thumb:active { transform: scale(1.15); cursor: grabbing; }
-    input[type=range].hour-range::-moz-range-thumb {
-        width: 22px; height: 22px; border-radius: 50%; background: var(--sage);
-        border: 4px solid #f7f4ed; box-shadow: 0 2px 10px rgba(74,84,76,.45); cursor: grab;
-    }
-    input[type=range].hour-range:focus-visible::-webkit-slider-thumb { outline: 2px solid var(--gold); outline-offset: 3px; }
+    .opt:hover { border-color: var(--sage); transform: translateY(-2px); }
+    .opt:focus-visible { outline: 2px solid var(--sage); outline-offset: 3px; }
+    .opt[aria-pressed="true"] { border-color: var(--sage); background: rgba(74,84,76,.05); }
+    .opt-label { display: block; font-size: .975rem; font-weight: 600; margin-bottom: .2rem; }
+    .opt-note  { display: block; font-size: .7rem; color: #8b8f89; line-height: 1.5; }
 
-    /* Add-on switches */
+    /* progress rail */
+    .pip { height: 2px; flex: 1; background: var(--mist); border-radius: 999px; transition: background .4s ease; }
+    .pip.is-done { background: var(--sage); }
+
+    /* switches on the result panel */
     .switch { width: 44px; height: 24px; border-radius: 999px; background: #d7dcd7; transition: background .3s ease; flex: none; }
     .switch span { display: block; width: 18px; height: 18px; margin: 3px; border-radius: 50%; background: #fff; transition: transform .3s cubic-bezier(.16,1,.3,1); box-shadow: 0 1px 4px rgba(0,0,0,.15); }
-    .addon[aria-pressed="true"] .switch { background: var(--sage); }
-    .addon[aria-pressed="true"] .switch span { transform: translateX(20px); }
-    .addon { transition: border-color .3s ease, background-color .3s ease; }
-    .addon[aria-pressed="true"] { border-color: var(--sage); background-color: rgba(74,84,76,.04); }
-    .addon:disabled { opacity: .45; cursor: not-allowed; }
+    .tog[aria-pressed="true"] .switch { background: var(--sage); }
+    .tog[aria-pressed="true"] .switch span { transform: translateX(20px); }
+    .tog:disabled { opacity: .4; cursor: not-allowed; }
+    .step-btn:disabled { opacity: .3; cursor: not-allowed; }
 
-    /* Comparison table */
-    .cmp-table th, .cmp-table td { border-bottom: 1px solid #eceae3; }
-    .cmp-table tbody tr:hover td, .cmp-table tbody tr:hover th { background: rgba(74,84,76,.035); }
-    .cmp-col-featured { background: rgba(74,84,76,.05); }
+    /* ---- Package list ---------------------------------------------------- */
+    .pkg-row { transition: border-color .3s ease, box-shadow .3s ease; }
+    .pkg-row.is-open { border-color: var(--sage); box-shadow: 0 18px 34px -28px rgba(74,84,76,.5); }
+    .pkg-body { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .4s cubic-bezier(.16,1,.3,1), opacity .3s ease; opacity: 0; }
+    .pkg-body > div { overflow: hidden; }
+    .pkg-row.is-open .pkg-body { grid-template-rows: 1fr; opacity: 1; }
+    .pkg-row.is-open .pkg-icon { transform: rotate(45deg); }
+    .pkg-icon { transition: transform .35s cubic-bezier(.16,1,.3,1); }
+
+    /* segmented filter */
+    .seg-btn { transition: color .3s ease, background-color .3s ease; }
 
     /* Timeline */
     .timeline-line { background: linear-gradient(to bottom, transparent, var(--mist) 8%, var(--mist) 92%, transparent); }
 
-    /* Studio segmented control */
-    .seg-btn { transition: color .3s ease, background-color .3s ease; }
-    .seg-btn[aria-pressed="true"] { background: var(--sage); color: #f1e8d7; }
-    /* on the dark sage panel the active pill inverts so it stays legible */
-    .finder-kind[aria-pressed="true"] { background: #f1e8d7; color: var(--sage); }
-
-
-    /* fallback so view switching still works if the Tailwind CDN is slow or blocked */
+    /* fallback so tab and view switching still work if the Tailwind CDN is slow or blocked */
     .hidden { display: none !important; }
-
-    /* Running estimate dock — positioned here, not via utility classes,
-       so it still works if the Tailwind CDN is slow or blocked */
-    .dock {
-        position: fixed; left: 0; right: 0; bottom: 0; z-index: 60;
-        transform: translateY(130%); transition: transform .55s cubic-bezier(.16,1,.3,1);
-    }
-    @media (min-width: 768px) {
-        .dock { left: auto; right: 1.5rem; bottom: 1.5rem; width: 372px; }
-    }
-    #dock-body { max-height: 68vh; overflow-y: auto; }
-    .dock.is-up { transform: none; }
-    .dock-chev { display: inline-block; transition: transform .4s cubic-bezier(.16,1,.3,1); }
-    .dock.is-open .dock-chev { transform: rotate(180deg); }
-    .dock-tog[aria-pressed="true"] .switch { background: #f1e8d7; }
-    .dock-tog[aria-pressed="true"] .switch span { transform: translateX(20px); background: var(--sage); }
-    .dock-tog .switch { background: rgba(241,232,215,.22); }
-    .dock-tog[disabled] { opacity: .4; cursor: not-allowed; }
-    .dock-step:disabled { opacity: .35; cursor: not-allowed; }
-    body.has-dock { padding-bottom: 96px; }
-    @media (min-width: 768px) { body.has-dock { padding-bottom: 0; } }
-
-    /* Inclusions matrix */
-    .inc-table th, .inc-table td { border-bottom: 1px solid #eceae3; }
-    .inc-table tbody tr:hover td, .inc-table tbody tr:hover th { background: rgba(74,84,76,.035); }
-    .inc-sticky { position: sticky; left: 0; background: #fff; z-index: 2; }
-    .inc-table tbody tr:hover .inc-sticky { background: #f6f7f5; }
-    .inc-pick { transition: color .25s ease; }
-    .inc-pick:hover { color: var(--sage); }
-    .inc-col-on { background: rgba(74,84,76,.06); }
-
-    /* Selected package card */
-    .pkg-card.is-chosen { border-color: var(--sage); box-shadow: 0 0 0 2px var(--sage), 0 24px 40px -24px rgba(74,84,76,.4); }
 
     @media (prefers-reduced-motion: reduce) {
         html { scroll-behavior: auto; }
         *, *::before, *::after { animation-duration: .001ms !important; transition-duration: .001ms !important; }
         .reveal { opacity: 1; transform: none; }
-        .dock { transition: none; }
     }
 </style>
 </head>
@@ -187,20 +143,20 @@
 </nav>
 
 <!-- Header -->
-<header class="pt-12 pb-6 text-center px-4">
-    <img src="https://natsukuco.github.io/interactiveratecard/Natsuku%20Logo-09.png" alt="Natsuku Photography" width="96" height="96"
-         class="w-20 h-20 md:w-24 md:h-24 mx-auto mb-6 rounded-full">
-    <h1 class="text-3xl md:text-5xl font-light tracking-[0.3em] md:tracking-[0.4em] uppercase mb-1 font-serif">Natsuku</h1>
+<header class="pt-10 pb-5 text-center px-4">
+    <img src="https://natsukuco.github.io/interactiveratecard/Natsuku%20Logo-09.png" alt="Natsuku Photography" width="80" height="80"
+         class="w-16 h-16 md:w-20 md:h-20 mx-auto mb-5 rounded-full">
+    <h1 class="text-2xl md:text-4xl font-light tracking-[0.3em] md:tracking-[0.4em] uppercase mb-1 font-serif">Natsuku</h1>
     <p class="text-[10px] font-bold uppercase tracking-[0.35em] text-gold mb-1">×</p>
-    <h2 class="text-lg md:text-2xl font-light tracking-[0.2em] uppercase mb-3 font-serif text-sage-soft">ThroughWebbedLens</h2>
-    <p class="italic text-sage-soft font-serif tracking-wide mb-2">懐く — to be fondly remembered</p>
-    <p class="text-[10px] font-bold uppercase tracking-[0.35em] text-stone-400 mb-8">Photo &amp; Film · 2026 / 2027</p>
+    <h2 class="text-base md:text-xl font-light tracking-[0.2em] uppercase mb-3 font-serif text-sage-soft">ThroughWebbedLens</h2>
+    <p class="italic text-sage-soft font-serif tracking-wide mb-2 text-sm">懐く — to be fondly remembered</p>
+    <p class="text-[10px] font-bold uppercase tracking-[0.35em] text-stone-400 mb-7">Photo &amp; Film · 2026 / 2027</p>
 
     <div class="flex justify-center border-b border-stone-200 max-w-md mx-auto" role="tablist" aria-label="Rate card sections">
-        <button role="tab" aria-selected="true" aria-controls="pricing" id="btn-pricing"
-                class="tab-btn is-active px-4 sm:px-6 py-3 text-[10px] sm:text-xs font-bold uppercase tracking-[0.15em]">Packages</button>
-        <button role="tab" aria-selected="false" aria-controls="builder" id="btn-builder"
-                class="tab-btn px-4 sm:px-6 py-3 text-[10px] sm:text-xs font-bold uppercase tracking-[0.15em]">Build Yours</button>
+        <button role="tab" aria-selected="true" aria-controls="fit" id="btn-fit"
+                class="tab-btn is-active px-4 sm:px-6 py-3 text-[10px] sm:text-xs font-bold uppercase tracking-[0.15em]">Find your fit</button>
+        <button role="tab" aria-selected="false" aria-controls="all" id="btn-all"
+                class="tab-btn px-4 sm:px-6 py-3 text-[10px] sm:text-xs font-bold uppercase tracking-[0.15em]">All packages</button>
         <button role="tab" aria-selected="false" aria-controls="timeline" id="btn-timeline"
                 class="tab-btn px-4 sm:px-6 py-3 text-[10px] sm:text-xs font-bold uppercase tracking-[0.15em]">Timeline</button>
     </div>
@@ -208,365 +164,153 @@
 
 <main>
 
-<!-- ============ TAB 1: PACKAGES ============ -->
-<section id="pricing" role="tabpanel" aria-labelledby="btn-pricing" class="tab-panel is-active max-w-6xl mx-auto px-6 pt-10 pb-20">
+<!-- ============ TAB 1: FIND YOUR FIT ============ -->
+<section id="fit" role="tabpanel" aria-labelledby="btn-fit" class="tab-panel is-active max-w-xl mx-auto px-5 pt-8 pb-20">
 
-    <!-- Inclusions Summary -->
-    <div class="reveal bg-white/80 p-8 md:p-10 rounded-[2rem] border border-stone-200/80 shadow-[0_18px_40px_-32px_rgba(74,84,76,.5)] mb-14 text-center">
-        <h2 class="text-xs uppercase tracking-[0.3em] text-sage font-bold mb-2">The Natsuku Standard</h2>
-        <p class="text-[11px] italic text-stone-400 mb-8 font-serif">included in every photography package, without exception</p>
-        <div class="grid grid-cols-2 md:grid-cols-5 gap-x-4 gap-y-6 text-[10px] font-semibold uppercase tracking-wider text-stone-600">
-            <div class="flex flex-col items-center gap-2"><span class="text-gold text-base leading-none">✦</span> Unlimited Edited Photographs</div>
-            <div class="flex flex-col items-center gap-2"><span class="text-gold text-base leading-none">✦</span> Online Photo Gallery</div>
-            <div class="flex flex-col items-center gap-2"><span class="text-gold text-base leading-none">✦</span> Itinerary Planning</div>
-            <div class="flex flex-col items-center gap-2"><span class="text-gold text-base leading-none">✦</span> 20 × 4R Photo Album</div>
-            <div class="flex flex-col items-center gap-2 col-span-2 md:col-span-1"><span class="text-gold text-base leading-none">✦</span> 2 × Magnetic Polaroid</div>
-        </div>
-        <div class="mt-8 pt-8 border-t border-stone-100">
-            <h2 class="text-xs uppercase tracking-[0.3em] text-sage font-bold mb-2">The Film Standard</h2>
-            <p class="text-[11px] italic text-stone-400 mb-8 font-serif">from six hours upward, every film package</p>
-            <div class="grid grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-6 text-[10px] font-semibold uppercase tracking-wider text-stone-600">
-                <div class="flex flex-col items-center gap-2"><span class="text-gold text-base leading-none">✦</span> 1 Min Vertical Film</div>
-                <div class="flex flex-col items-center gap-2"><span class="text-gold text-base leading-none">✦</span> 3–5 Min Wedding Film</div>
-                <div class="flex flex-col items-center gap-2 col-span-2 md:col-span-1"><span class="text-gold text-base leading-none">✦</span> Thumbdrive + Keepsake Pouch</div>
-            </div>
-        </div>
+    <!-- progress rail -->
+    <div id="quiz-progress" class="flex items-center gap-1.5 mb-8" aria-hidden="true"></div>
+
+    <!-- one question at a time -->
+    <div id="quiz-stage" aria-live="polite">
+        <p id="q-count" class="text-[10px] font-bold uppercase tracking-[0.25em] text-stone-400 mb-3"></p>
+        <h2 id="q-title" class="font-serif text-2xl md:text-3xl leading-snug mb-2"></h2>
+        <p id="q-sub" class="text-xs text-stone-500 italic leading-relaxed mb-7"></p>
+        <div id="q-options" class="space-y-3"></div>
+        <button type="button" id="q-back"
+                class="mt-7 text-[10px] font-bold uppercase tracking-[0.2em] text-stone-400 hover:text-sage transition-colors">← Back</button>
     </div>
 
-    <!-- Hour finder -->
-    <div class="reveal mb-14">
-        <div class="bg-sage text-cream rounded-[2rem] p-8 md:p-10 relative overflow-hidden">
-            <div class="absolute -right-16 -top-16 w-56 h-56 rounded-full border border-cream/15" aria-hidden="true"></div>
-            <div class="absolute -right-6 -bottom-24 w-64 h-64 rounded-full border border-cream/10" aria-hidden="true"></div>
-            <div class="relative z-10 grid md:grid-cols-[1fr_auto] gap-8 md:gap-12 items-end">
-                <div>
-                    <h3 class="text-[10px] font-bold uppercase tracking-[0.3em] text-cream/60 mb-3">Find your fit</h3>
-                    <label for="finder-hours" class="block font-serif italic text-2xl md:text-3xl mb-6">How long is your day?</label>
+    <!-- the recommendation -->
+    <div id="result" class="hidden">
+        <div class="bg-white rounded-[2rem] border border-stone-200 p-7 md:p-9 mb-5">
+            <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-sage mb-4">Our recommendation</p>
+            <h2 id="r-name" class="font-serif text-3xl md:text-4xl leading-tight mb-1"></h2>
+            <p id="r-tag" class="text-[10px] uppercase tracking-widest text-stone-400 mb-6"></p>
 
-                    <div class="flex flex-wrap gap-1 p-1 bg-sage-deep/50 rounded-full text-[9px] font-bold uppercase tracking-widest mb-8 w-fit" role="group" aria-label="What to capture">
-                        <button type="button" class="seg-btn finder-kind px-4 py-2 rounded-full text-cream/60" data-kind="combo" aria-pressed="true">Photo + Film</button>
-                        <button type="button" class="seg-btn finder-kind px-4 py-2 rounded-full text-cream/60" data-kind="photo" aria-pressed="false">Photo only</button>
-                        <button type="button" class="seg-btn finder-kind px-4 py-2 rounded-full text-cream/60" data-kind="video" aria-pressed="false">Film only</button>
-                    </div>
+            <p id="r-total" class="font-serif text-5xl font-light mb-2"></p>
+            <p id="r-meta" class="text-xs text-stone-500 mb-7"></p>
+            <p id="r-blurb" class="text-xs text-stone-500 italic leading-relaxed border-l-2 border-sage-mist pl-4 mb-8"></p>
 
-                    <input id="finder-hours" class="hour-range" type="range" min="1" max="12" step="1" value="9" aria-describedby="finder-result">
-                    <div class="flex justify-between text-[9px] font-bold uppercase tracking-widest text-cream/45 mt-4">
-                        <span>1 hr</span><span>6 hrs</span><span>12 hrs</span>
-                    </div>
-                </div>
-                <div id="finder-result" class="md:text-right md:min-w-[13rem]" aria-live="polite">
-                    <div class="text-[10px] font-bold uppercase tracking-[0.25em] text-cream/60 mb-2">
-                        <span id="finder-hours-label">9 hours</span> of coverage
-                    </div>
-                    <div id="finder-name" class="font-serif text-4xl md:text-5xl mb-2">The Narrative</div>
-                    <div class="text-cream/70 text-sm font-light mb-5">from <span id="finder-price">$3,848</span></div>
-                    <button type="button" id="finder-add"
-                            class="text-[10px] font-bold uppercase tracking-[0.2em] bg-cream text-sage px-5 py-3 rounded-full hover:bg-white transition-colors">
-                        Add to estimate →
-                    </button>
-                </div>
+            <!-- fine tuning -->
+            <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-stone-400 mb-4">Adjust anything</p>
+
+            <div class="flex items-center justify-between gap-3 py-3 border-t border-stone-100">
+                <span class="text-sm">Hours of coverage</span>
+                <span class="flex items-center gap-2">
+                    <button type="button" class="step-btn w-9 h-9 rounded-full border border-stone-200 leading-none hover:border-sage hover:text-sage transition-colors" data-d="-1" aria-label="One hour less">−</button>
+                    <output id="r-hours" class="w-9 text-center text-sm tabular-nums font-semibold">0</output>
+                    <button type="button" class="step-btn w-9 h-9 rounded-full border border-stone-200 leading-none hover:border-sage hover:text-sage transition-colors" data-d="1" aria-label="One hour more">+</button>
+                </span>
             </div>
-        </div>
-    </div>
 
-    <!-- View switch -->
-    <div class="reveal flex flex-wrap items-center justify-between gap-4 mb-6">
-        <h2 class="text-xs uppercase tracking-[0.3em] text-stone-400 font-bold">The Packages</h2>
-        <div class="flex items-center gap-1 p-1 bg-white border border-stone-200 rounded-full text-[9px] font-bold uppercase tracking-widest" role="group" aria-label="How to view the packages">
-            <button type="button" class="view-btn px-4 py-2 rounded-full bg-sage text-cream transition-colors" data-view="cards" aria-pressed="true">Cards</button>
-            <button type="button" class="view-btn px-4 py-2 rounded-full text-stone-400 hover:text-sage transition-colors" data-view="inclusions" aria-pressed="false">Inclusions</button>
-            <button type="button" class="view-btn px-4 py-2 rounded-full text-stone-400 hover:text-sage transition-colors" data-view="compare" aria-pressed="false">Compare</button>
-        </div>
-    </div>
+            <button type="button" id="r-duo" class="tog w-full flex items-center justify-between gap-4 py-3 border-t border-stone-100 text-left" aria-pressed="false">
+                <span>
+                    <span class="block text-sm">A second storyteller</span>
+                    <span id="r-duo-note" class="block text-[10px] text-stone-400 uppercase tracking-widest mt-0.5"></span>
+                </span>
+                <span class="switch" aria-hidden="true"><span></span></span>
+            </button>
 
-    <!-- Studio filter (applies to Cards + Inclusions) -->
-    <div id="studio-filter" class="reveal flex flex-wrap items-center gap-1 p-1 bg-white border border-stone-200 rounded-full text-[9px] font-bold uppercase tracking-widest w-fit mb-8" role="group" aria-label="Filter packages">
-        <button type="button" class="seg-btn cat-btn px-4 py-2 rounded-full bg-sage text-cream" data-cat="all" aria-pressed="true">All</button>
-        <button type="button" class="seg-btn cat-btn px-4 py-2 rounded-full text-stone-400" data-cat="combo" aria-pressed="false">Photo + Film</button>
-        <button type="button" class="seg-btn cat-btn px-4 py-2 rounded-full text-stone-400" data-cat="photo" aria-pressed="false">Photography</button>
-        <button type="button" class="seg-btn cat-btn px-4 py-2 rounded-full text-stone-400" data-cat="video" aria-pressed="false">Film</button>
-    </div>
+            <button type="button" id="r-pws" class="tog w-full flex items-center justify-between gap-4 py-3 border-t border-stone-100 text-left" aria-pressed="false">
+                <span>
+                    <span class="block text-sm">Pre-wedding shoot</span>
+                    <span class="block text-[10px] text-stone-400 uppercase tracking-widest mt-0.5">+$1,020 · 2 hrs, one location, photo + film</span>
+                </span>
+                <span class="switch" aria-hidden="true"><span></span></span>
+            </button>
 
-    <div id="cards-view"><div id="pkg-groups"></div></div>
+            <button type="button" id="r-show" class="tog w-full flex items-center justify-between gap-4 py-3 border-t border-b border-stone-100 text-left" aria-pressed="false">
+                <span>
+                    <span class="block text-sm">Hitcheed showcase pricing</span>
+                    <span id="r-show-note" class="block text-[10px] text-stone-400 uppercase tracking-widest mt-0.5"></span>
+                </span>
+                <span class="switch" aria-hidden="true"><span></span></span>
+            </button>
 
-    <!-- Inclusions matrix -->
-    <div id="inclusions-view" class="hidden mb-16">
-        <p class="text-xs text-stone-500 italic mb-6 max-w-2xl leading-relaxed">
-            Every deliverable, package by package. A gold ✦ means it's included; a dash means it isn't.
-            Tap any package name to put it in your estimate.
-        </p>
-        <div id="inc-groups"></div>
-        <p class="text-[10px] text-stone-400 mt-4 text-center uppercase tracking-widest">Scroll each table sideways on a small screen</p>
-    </div>
-
-    <!-- Compare view -->
-    <div id="compare-view" class="hidden mb-16">
-        <div class="overflow-x-auto bg-white rounded-[2rem] border border-stone-200 p-2">
-            <table class="cmp-table w-full min-w-[860px] text-left">
-                <caption class="sr-only">Comparison of Natsuku and ThroughWebbedLens wedding packages</caption>
-                <thead>
-                    <tr class="text-[9px] uppercase tracking-widest text-stone-400">
-                        <th scope="col" class="p-4 font-bold">Package</th>
-                        <th scope="col" class="p-4 font-bold">Studio</th>
-                        <th scope="col" class="p-4 font-bold">Coverage</th>
-                        <th scope="col" class="p-4 font-bold">Crew</th>
-                        <th scope="col" class="p-4 font-bold text-right">Investment</th>
-                        <th scope="col" class="p-4 font-bold text-right">Showcase</th>
-                        <th scope="col" class="p-4 font-bold text-right">Extra hour</th>
-                        <th scope="col" class="p-4 font-bold text-right"><span class="sr-only">Select</span></th>
-                    </tr>
-                </thead>
-                <tbody id="cmp-body" class="text-xs text-stone-600"></tbody>
-            </table>
-        </div>
-        <p class="text-[10px] text-stone-400 mt-4 text-center uppercase tracking-widest">Scroll the table sideways to see every column</p>
-    </div>
-
-    <!-- Add-ons -->
-    <h2 class="reveal text-xs uppercase tracking-[0.3em] text-stone-400 font-bold mb-8">Add to Any Package</h2>
-    <div class="grid md:grid-cols-2 gap-6 mb-16">
-        <div class="reveal bg-white p-8 rounded-[2rem] border border-stone-200">
-            <div class="flex items-baseline justify-between mb-4">
-                <h3 class="text-xl font-serif">Additional Hours</h3>
-                <span class="text-2xl font-light">$250<span class="text-xs text-stone-400">/hr</span></span>
+            <!-- breakdown -->
+            <dl id="r-lines" class="space-y-2.5 text-sm font-light mt-6"></dl>
+            <div class="flex items-baseline justify-between border-t border-stone-200 mt-5 pt-4">
+                <dt class="text-[10px] font-bold uppercase tracking-[0.25em] text-stone-500">Total</dt>
+                <dd id="r-total-2" class="font-serif text-3xl"></dd>
             </div>
-            <p class="text-xs text-stone-500 italic mb-6 leading-relaxed">Running long? Extend any package hour by hour — no need to jump a whole tier.</p>
-            <div class="flex flex-wrap gap-2 text-[10px] font-bold uppercase tracking-widest text-sage">
-                <span class="px-3 py-2 bg-sage-mist/60 rounded-full">Photo only · $250/hr</span>
-                <span class="px-3 py-2 bg-sage-mist/60 rounded-full">Video only · $250/hr</span>
-                <span class="px-3 py-2 bg-sage-mist/60 rounded-full">Photo + Film · $500/hr</span>
+            <div class="flex items-baseline justify-between mt-2 text-stone-500 text-xs">
+                <span class="uppercase tracking-widest">30% deposit to reserve</span>
+                <span id="r-deposit" class="font-semibold"></span>
             </div>
-            <p class="text-[10px] text-stone-400 mt-4 leading-relaxed">Director's Cut runs at $1,000/hr for its four-person team.</p>
+
+            <a href="https://www.instagram.com/natsuku.co?igsh=M3Y5cXU1Znl2cmY4" target="_blank" rel="noopener"
+               class="block text-center w-full mt-7 text-[10px] font-bold uppercase tracking-[0.2em] bg-sage text-cream px-5 py-4 rounded-full hover:bg-sage-deep transition-colors">Send this to us on Instagram</a>
+            <button type="button" id="r-copy"
+                    class="w-full mt-2.5 text-[10px] font-bold uppercase tracking-[0.2em] border border-sage text-sage px-5 py-4 rounded-full hover:bg-sage hover:text-cream transition-colors">Copy this estimate</button>
+            <p class="text-[10px] text-stone-400 mt-4 text-center leading-relaxed">Indicative estimate in SGD. Final quotation confirmed over a chat.</p>
         </div>
 
-        <div class="reveal bg-white p-8 rounded-[2rem] border border-stone-200">
-            <div class="flex items-baseline justify-between mb-4">
-                <h3 class="text-xl font-serif">Pre-Wedding Shoot</h3>
-                <span class="text-2xl font-light">$1,020</span>
-            </div>
-            <p class="text-xs text-stone-500 italic mb-6 leading-relaxed">A relaxed session before the day itself — a rehearsal for being photographed together.</p>
-            <div class="flex flex-wrap gap-2 text-[10px] font-bold uppercase tracking-widest text-sage">
-                <span class="px-3 py-2 bg-sage-mist/60 rounded-full">2 Hours</span>
-                <span class="px-3 py-2 bg-sage-mist/60 rounded-full">1 Location</span>
-                <span class="px-3 py-2 bg-sage-mist/60 rounded-full">Photo + Film</span>
-                <span class="px-3 py-2 bg-sage-mist/60 rounded-full">Unlimited Edits</span>
-                <span class="px-3 py-2 bg-sage-mist/60 rounded-full">Online Gallery</span>
-            </div>
+        <!-- what you receive -->
+        <div class="bg-white rounded-[2rem] border border-stone-200 p-7 md:p-9 mb-5">
+            <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-stone-400 mb-5">What you'll receive</p>
+            <div id="r-includes" class="space-y-5"></div>
         </div>
-    </div>
 
-    <!-- Memory Capsule -->
-    <div class="reveal bg-sage-deep text-cream p-8 md:p-12 rounded-[2rem] relative overflow-hidden">
-        <div class="absolute -left-20 -bottom-24 w-72 h-72 rounded-full border border-cream/10" aria-hidden="true"></div>
-        <div class="relative z-10">
-            <h3 class="text-[10px] font-bold uppercase tracking-[0.3em] text-cream/60 mb-3">Stationary Setup</h3>
-            <h2 class="font-serif text-3xl md:text-4xl mb-4">Memory Capsule</h2>
-            <p class="text-cream/70 text-sm font-light max-w-2xl mb-2 leading-relaxed">
-                Fancy a professional photobooth experience instead of a roaming event photographer?
-                Our Memory Capsule provides high-quality, instant keepsakes for your guests.
-            </p>
-            <p class="text-cream/45 text-[11px] italic mb-8">* A standalone specialty — it cannot be added on to other packages.</p>
-            <div class="grid grid-cols-3 gap-4 max-w-lg">
-                <div class="bg-cream/10 rounded-2xl p-5 text-center"><div class="text-[9px] uppercase tracking-widest text-cream/50 mb-2">2 Hours</div><div class="font-serif text-2xl">$488</div></div>
-                <div class="bg-cream/10 rounded-2xl p-5 text-center"><div class="text-[9px] uppercase tracking-widest text-cream/50 mb-2">3 Hours</div><div class="font-serif text-2xl">$588</div></div>
-                <div class="bg-cream/10 rounded-2xl p-5 text-center"><div class="text-[9px] uppercase tracking-widest text-cream/50 mb-2">4 Hours</div><div class="font-serif text-2xl">$728</div></div>
-            </div>
+        <div class="flex flex-wrap justify-center gap-x-6 gap-y-2 text-[10px] font-bold uppercase tracking-[0.2em]">
+            <button type="button" id="r-restart" class="text-stone-400 hover:text-sage transition-colors">↺ Start over</button>
+            <button type="button" id="r-browse" class="text-stone-400 hover:text-sage transition-colors">Browse every package →</button>
         </div>
     </div>
 </section>
 
-<!-- ============ TAB 2: BUILD YOURS ============ -->
-<section id="builder" role="tabpanel" aria-labelledby="btn-builder" class="tab-panel max-w-6xl mx-auto px-6 pt-10 pb-20">
-    <div class="text-center mb-12">
-        <h2 class="text-xs uppercase tracking-[0.3em] text-sage font-bold mb-2">Your Day, Your Numbers</h2>
-        <p class="font-serif italic text-2xl md:text-3xl">Build your estimate</p>
+<!-- ============ TAB 2: ALL PACKAGES ============ -->
+<section id="all" role="tabpanel" aria-labelledby="btn-all" class="tab-panel max-w-3xl mx-auto px-5 pt-8 pb-20">
+
+    <p class="text-xs text-stone-500 italic leading-relaxed mb-6 text-center">
+        Every package, in full. Tap one to see exactly what it includes.
+    </p>
+
+    <div class="flex flex-wrap items-center justify-center gap-1 p-1 bg-white border border-stone-200 rounded-full text-[9px] font-bold uppercase tracking-widest w-fit mx-auto mb-8" role="group" aria-label="Filter packages">
+        <button type="button" class="seg-btn cat-btn px-4 py-2 rounded-full bg-sage text-cream" data-cat="all" aria-pressed="true">All</button>
+        <button type="button" class="seg-btn cat-btn px-4 py-2 rounded-full text-stone-400" data-cat="combo" aria-pressed="false">Photo + Film</button>
+        <button type="button" class="seg-btn cat-btn px-4 py-2 rounded-full text-stone-400" data-cat="photo" aria-pressed="false">Photo</button>
+        <button type="button" class="seg-btn cat-btn px-4 py-2 rounded-full text-stone-400" data-cat="video" aria-pressed="false">Film</button>
     </div>
 
-    <div class="grid lg:grid-cols-[1fr_380px] gap-8 items-start">
+    <div id="pkg-groups"></div>
 
-        <div class="space-y-6">
-            <!-- Coverage type -->
-            <div class="bg-white p-8 rounded-[2rem] border border-stone-200">
-                <h3 class="text-[10px] font-bold uppercase tracking-[0.25em] text-stone-400 mb-5">What would you like captured?</h3>
-                <div class="grid sm:grid-cols-3 gap-3">
-                    <button type="button" class="bld-kind addon text-left p-5 rounded-2xl border border-stone-200" data-kind="combo" aria-pressed="true">
-                        <div class="text-sm font-semibold mb-1">Photo + Film</div>
-                        <div class="text-[10px] text-stone-400 uppercase tracking-widest">Both studios</div>
-                    </button>
-                    <button type="button" class="bld-kind addon text-left p-5 rounded-2xl border border-stone-200" data-kind="photo" aria-pressed="false">
-                        <div class="text-sm font-semibold mb-1">Photography</div>
-                        <div class="text-[10px] text-stone-400 uppercase tracking-widest">Natsuku</div>
-                    </button>
-                    <button type="button" class="bld-kind addon text-left p-5 rounded-2xl border border-stone-200" data-kind="video" aria-pressed="false">
-                        <div class="text-sm font-semibold mb-1">Film</div>
-                        <div class="text-[10px] text-stone-400 uppercase tracking-widest">ThroughWebbedLens</div>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Hours -->
-            <div class="bg-white p-8 rounded-[2rem] border border-stone-200">
-                <div class="flex items-baseline justify-between mb-6">
-                    <h3 class="text-[10px] font-bold uppercase tracking-[0.25em] text-stone-400">Hours of coverage</h3>
-                    <span id="bld-hours-out" class="font-serif text-4xl">9</span>
-                </div>
-                <input id="bld-hours" class="hour-range" type="range" min="1" max="16" step="1" value="9">
-                <div class="flex justify-between text-[9px] font-bold uppercase tracking-widest text-stone-300 mt-4">
-                    <span>1</span><span>4</span><span>8</span><span>12</span><span>16</span>
-                </div>
-                <p id="bld-tier-note" class="text-xs text-stone-500 italic mt-5"></p>
-            </div>
-
-            <!-- Add-ons -->
-            <div class="bg-white p-8 rounded-[2rem] border border-stone-200">
-                <h3 class="text-[10px] font-bold uppercase tracking-[0.25em] text-stone-400 mb-5">Add-ons</h3>
-                <div class="space-y-3">
-                    <button type="button" id="ao-duo" class="addon w-full flex items-center justify-between gap-4 p-5 rounded-2xl border border-stone-200 text-left" aria-pressed="false">
-                        <span>
-                            <span class="block text-sm font-semibold">Second shooter on each team</span>
-                            <span id="ao-duo-note" class="block text-[10px] text-stone-400 uppercase tracking-widest mt-1">Available from 10 hours of coverage</span>
-                        </span>
-                        <span class="switch" aria-hidden="true"><span></span></span>
-                    </button>
-                    <button type="button" id="ao-pws" class="addon w-full flex items-center justify-between gap-4 p-5 rounded-2xl border border-stone-200 text-left" aria-pressed="false">
-                        <span>
-                            <span class="block text-sm font-semibold">Pre-wedding shoot</span>
-                            <span class="block text-[10px] text-stone-400 uppercase tracking-widest mt-1">+$1,020 · 2 hrs, 1 location, photo + film</span>
-                        </span>
-                        <span class="switch" aria-hidden="true"><span></span></span>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Showcase offers -->
-            <div class="bg-white p-8 rounded-[2rem] border border-stone-200">
-                <h3 class="text-[10px] font-bold uppercase tracking-[0.25em] text-stone-400 mb-1">Hitcheed Showcase offers</h3>
-                <p class="text-[11px] italic text-stone-400 font-serif mb-5">for couples who book with us at the fair</p>
-                <div class="space-y-3">
-                    <button type="button" id="ao-d5" class="addon w-full flex items-center justify-between gap-4 p-5 rounded-2xl border border-stone-200 text-left" aria-pressed="false">
-                        <span>
-                            <span class="block text-sm font-semibold">Showcase 5% off</span>
-                            <span id="ao-d5-note" class="block text-[10px] text-stone-400 uppercase tracking-widest mt-1">On photo + film packages</span>
-                        </span>
-                        <span class="switch" aria-hidden="true"><span></span></span>
-                    </button>
-                    <button type="button" id="ao-d250" class="addon w-full flex items-center justify-between gap-4 p-5 rounded-2xl border border-stone-200 text-left" aria-pressed="false">
-                        <span>
-                            <span class="block text-sm font-semibold">$250 showcase discount</span>
-                            <span id="ao-d250-note" class="block text-[10px] text-stone-400 uppercase tracking-widest mt-1">Stacks with the 5%</span>
-                        </span>
-                        <span class="switch" aria-hidden="true"><span></span></span>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Receive -->
-            <div class="bg-white p-8 rounded-[2rem] border border-stone-200">
-                <h3 class="text-[10px] font-bold uppercase tracking-[0.25em] text-stone-400 mb-5">What you'll receive</h3>
-                <ul id="bld-includes" class="grid sm:grid-cols-2 gap-x-6 gap-y-2 text-xs text-stone-600"></ul>
-            </div>
-        </div>
-
-        <!-- Estimate lives in the dock -->
-        <aside class="lg:sticky lg:top-24">
-            <div class="bg-white p-8 rounded-[2rem] border border-stone-200 text-center">
-                <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-sage mb-3">Your running total</p>
-                <p class="text-xs text-stone-500 italic leading-relaxed mb-6">
-                    Your estimate updates live in the panel at the bottom of the screen. Open it any time to
-                    see the full breakdown, adjust add-ons, or copy the figures.
-                </p>
-                <button type="button" id="bld-open-dock"
-                        class="w-full text-[10px] font-bold uppercase tracking-[0.2em] bg-sage text-cream px-5 py-4 rounded-full hover:bg-sage-deep transition-colors">
-                    Open the breakdown
-                </button>
-            </div>
-        </aside>
+    <!-- what's in every package -->
+    <div class="bg-white/80 rounded-[2rem] border border-stone-200/80 p-7 md:p-9 mt-10">
+        <h3 class="text-[10px] font-bold uppercase tracking-[0.25em] text-sage mb-1">In every photography package</h3>
+        <p class="text-[11px] italic text-stone-400 mb-4 font-serif">without exception</p>
+        <p class="text-xs text-stone-600 leading-relaxed mb-6">
+            Unlimited edited photographs · Online photo gallery · Itinerary planning · 20 × 4R photo album · 2 × magnetic polaroid
+        </p>
+        <h3 class="text-[10px] font-bold uppercase tracking-[0.25em] text-sage mb-1">In every film package</h3>
+        <p class="text-[11px] italic text-stone-400 mb-4 font-serif">from six hours upward</p>
+        <p class="text-xs text-stone-600 leading-relaxed mb-6">
+            1 min vertical film · 3–5 min wedding film · Thumbdrive and keepsake pouch
+        </p>
+        <h3 class="text-[10px] font-bold uppercase tracking-[0.25em] text-sage mb-1">Add to any package</h3>
+        <p class="text-xs text-stone-600 leading-relaxed">
+            Additional hours from $250/hr ($500/hr for photo + film, $1,000/hr for Director's Cut) ·
+            Pre-wedding shoot at $1,020 for two hours at one location, photographed and filmed
+        </p>
     </div>
 </section>
 
 <!-- ============ TAB 3: TIMELINE ============ -->
-<section id="timeline" role="tabpanel" aria-labelledby="btn-timeline" class="tab-panel max-w-4xl mx-auto px-6 pt-10 pb-20">
-    <div class="text-center mb-16">
+<section id="timeline" role="tabpanel" aria-labelledby="btn-timeline" class="tab-panel max-w-3xl mx-auto px-5 pt-8 pb-20">
+    <div class="text-center mb-12">
         <h2 class="text-xs uppercase tracking-[0.3em] text-sage font-bold mb-2">The Process</h2>
         <p class="font-serif italic text-2xl md:text-3xl">From Hello to High-Res</p>
     </div>
 
     <div class="relative">
         <div class="timeline-line absolute left-1/2 -translate-x-1/2 top-0 bottom-0 w-px hidden md:block" aria-hidden="true"></div>
-        <ol id="tl-list" class="space-y-10 md:space-y-0"></ol>
+        <ol id="tl-list" class="space-y-8 md:space-y-0"></ol>
     </div>
 </section>
 
 </main>
 
-
-<!-- ============ RUNNING ESTIMATE DOCK ============ -->
-<div id="dock" class="dock" aria-live="polite">
-  <div class="bg-sage text-cream rounded-t-[1.75rem] md:rounded-[1.75rem] overflow-hidden shadow-[0_-12px_40px_-14px_rgba(46,51,47,.5)] md:shadow-[0_26px_54px_-20px_rgba(46,51,47,.55)]">
-
-    <button type="button" id="dock-toggle" class="w-full flex items-center justify-between gap-3 px-6 py-4 text-left" aria-expanded="false" aria-controls="dock-body">
-      <span class="min-w-0">
-        <span class="block text-[9px] font-bold uppercase tracking-[0.25em] text-cream/55 mb-1">Your estimate</span>
-        <span id="dock-name" class="block font-serif text-lg leading-tight truncate">—</span>
-      </span>
-      <span class="flex items-center gap-3 shrink-0">
-        <span class="text-right">
-          <span id="dock-total" class="block font-serif text-2xl leading-none">$0</span>
-          <span id="dock-hint" class="block text-[9px] uppercase tracking-widest text-cream/55 mt-1">See breakdown</span>
-        </span>
-        <span id="dock-chev" class="dock-chev text-cream/70 text-lg leading-none" aria-hidden="true">⌃</span>
-      </span>
-    </button>
-
-    <div id="dock-body" class="hidden border-t border-cream/15 px-6 pt-5 pb-6">
-
-      <p class="text-[9px] font-bold uppercase tracking-[0.25em] text-cream/55 mb-3">Adjust</p>
-
-      <div class="flex items-center justify-between gap-3 mb-3">
-        <span class="text-sm">Additional hours</span>
-        <span class="flex items-center gap-2">
-          <button type="button" class="dock-step w-8 h-8 rounded-full border border-cream/30 leading-none hover:bg-cream/10 transition-colors" data-d="-1" aria-label="Remove an hour">−</button>
-          <output id="dock-hrs" class="w-10 text-center text-sm tabular-nums">0</output>
-          <button type="button" class="dock-step w-8 h-8 rounded-full border border-cream/30 leading-none hover:bg-cream/10 transition-colors" data-d="1" aria-label="Add an hour">+</button>
-        </span>
-      </div>
-
-      <button type="button" id="dock-pws" class="dock-tog w-full flex items-center justify-between gap-3 py-2.5 text-left" aria-pressed="false">
-        <span class="text-sm">Pre-wedding shoot <span class="text-cream/50 text-xs">+$1,020</span></span>
-        <span class="switch" aria-hidden="true"><span></span></span>
-      </button>
-      <button type="button" id="dock-d5" class="dock-tog w-full flex items-center justify-between gap-3 py-2.5 text-left" aria-pressed="false">
-        <span class="text-sm">Showcase 5% off <span id="dock-d5-note" class="text-cream/50 text-xs">photo + film only</span></span>
-        <span class="switch" aria-hidden="true"><span></span></span>
-      </button>
-      <button type="button" id="dock-d250" class="dock-tog w-full flex items-center justify-between gap-3 py-2.5 text-left" aria-pressed="false">
-        <span class="text-sm">$250 showcase discount <span id="dock-d250-note" class="text-cream/50 text-xs">from 9 hours</span></span>
-        <span class="switch" aria-hidden="true"><span></span></span>
-      </button>
-
-      <p class="text-[9px] font-bold uppercase tracking-[0.25em] text-cream/55 mt-6 mb-3">Breakdown</p>
-      <dl id="dock-lines" class="space-y-2.5 text-sm font-light"></dl>
-
-      <div class="flex items-baseline justify-between border-t border-cream/25 mt-5 pt-4">
-        <dt class="text-[10px] font-bold uppercase tracking-[0.25em] text-cream/70">Total</dt>
-        <dd id="dock-total-2" class="font-serif text-3xl">$0</dd>
-      </div>
-      <div class="flex items-baseline justify-between mt-2 text-cream/70 text-xs">
-        <span class="uppercase tracking-widest">30% deposit to reserve</span>
-        <span id="dock-deposit" class="font-semibold">$0</span>
-      </div>
-
-      <button type="button" id="dock-copy" class="w-full mt-6 text-[10px] font-bold uppercase tracking-[0.2em] bg-cream text-sage px-5 py-3.5 rounded-full hover:bg-white transition-colors">Copy this estimate</button>
-      <a href="https://www.instagram.com/natsuku.co?igsh=M3Y5cXU1Znl2cmY4" target="_blank" rel="noopener"
-         class="block text-center w-full mt-2.5 text-[10px] font-bold uppercase tracking-[0.2em] border border-cream/30 px-5 py-3.5 rounded-full hover:bg-cream/10 transition-colors">Send it to us on Instagram</a>
-      <button type="button" id="dock-clear" class="w-full mt-3 text-[10px] uppercase tracking-[0.2em] text-cream/50 hover:text-cream transition-colors py-1">Clear estimate</button>
-      <p class="text-[10px] text-cream/45 mt-4 text-center leading-relaxed">Indicative estimate in SGD. Final quotation confirmed over a chat.</p>
-    </div>
-  </div>
-</div>
-
 <!-- Footer -->
-<footer class="bg-sage-deep text-cream/70 py-16 px-6 text-center">
+<footer class="bg-sage-deep text-cream/70 py-14 px-6 text-center">
     <p class="font-serif italic text-2xl md:text-3xl text-cream mb-8">Fondly Remembered.</p>
     <div class="flex flex-wrap justify-center gap-4 md:gap-8 text-[10px] font-bold uppercase tracking-[0.2em] mb-10">
         <a href="https://skybite.pic-time.com/client" target="_blank" rel="noopener" class="border-b border-cream/30 hover:border-cream hover:text-cream transition-colors pb-1">View Full Portfolio</a>
@@ -584,11 +328,10 @@
 /* ==========================================================================
    RATE CARD DATA — edit here, the whole page follows
    ========================================================================== */
-const EXTRA_HOUR   = 250;    // base additional-hour rate
-const PWS_FEE      = 1020;   // pre-wedding / Second Roll session
+const PWS_FEE      = 1020;   // pre-wedding shoot
 const DEPOSIT_PCT  = 0.30;
 const SHOWCASE_PCT = 0.05;   // Hitcheed discount — photo + film packages only
-const SHOWCASE_FLAT= 250;    // flat showcase discount — 9 hours and above
+const SHOWCASE_FLAT= 250;    // flat showcase discount — longer packages only
 
 const PHOTO_STD = ['Unlimited edited photographs','Online photo gallery','Itinerary planning','20 × 4R photo album','2 × magnetic polaroid'];
 const PHOTO_MIN = ['Unlimited edited photographs','Online photo gallery'];
@@ -661,6 +404,9 @@ const PACKAGES = [
 const KIND_LABEL  = { combo:'Photo + Film', photo:'Photography Only', video:'Film Only' };
 const KIND_STUDIO = { combo:'Natsuku × TWL', photo:'Natsuku', video:'ThroughWebbedLens' };
 
+/* the smallest number of hours at which a second shooter is offered */
+const DUO_FROM = 10;
+
 const TIMELINE = [
   ['Direct Message','Reach out on Instagram with your date, time, and preferred number of hours.'],
   ['Deposit','A 30% non-refundable deposit is required to secure your specific date on our calendar.'],
@@ -671,21 +417,75 @@ const TIMELINE = [
 ];
 
 /* ==========================================================================
+   THE QUESTIONS — asked one at a time, in this order
+   ========================================================================== */
+const QUESTIONS = [
+  {
+    id: 'kind',
+    title: 'What would you like us to capture?',
+    sub: 'Photographs, a film, or both — the two studios work side by side.',
+    options: [
+      { v:'combo', label:'Photographs and a film', note:'Natsuku × ThroughWebbedLens, working as one team' },
+      { v:'photo', label:'Photographs only',       note:'Natsuku' },
+      { v:'video', label:'A film only',            note:'ThroughWebbedLens' },
+    ]
+  },
+  {
+    id: 'hours',
+    title: 'How much of the day should we be there for?',
+    sub: 'A rough sense is plenty — you can nudge the exact hours afterwards.',
+    options: [
+      { v:2,  label:'A short session',            note:'Around 2 hours, one location' },
+      { v:3,  label:'One key moment',             note:'Around 3 hours — a solemnisation or tea ceremony' },
+      { v:6,  label:'The morning, or the dinner', note:'Around 6 hours' },
+      { v:9,  label:'Most of the day',            note:'Around 9 hours, morning through to the evening' },
+      { v:12, label:'Dawn to the last dance',     note:'Around 12 hours, and splittable over two days' },
+    ]
+  },
+  {
+    id: 'duo',
+    title: 'One storyteller, or two?',
+    sub: 'A second pair of eyes means the two of you can be covered at once when the morning splits in half.',
+    when: a => a.hours >= DUO_FROM,
+    options: [
+      { v:false, label:'One is plenty',  note:'Our usual way of working' },
+      { v:true,  label:'Two, please',    note:'A second shooter on each craft you book' },
+    ]
+  },
+  {
+    id: 'pws',
+    title: 'A pre-wedding shoot as well?',
+    sub: 'A relaxed session before the day itself — a rehearsal for being photographed together.',
+    options: [
+      { v:true,  label:'Yes, let’s do one', note:'+$1,020 · 2 hours, one location, photographed and filmed' },
+      { v:false, label:'Not this time',          note:'Just the wedding day' },
+    ]
+  },
+  {
+    id: 'show',
+    title: 'Are you booking with us at the Hitcheed showcase?',
+    sub: 'Showcase couples get 5% off photo and film packages, and $250 off the longer ones.',
+    options: [
+      { v:true,  label:'Yes, at the showcase', note:'Apply showcase pricing' },
+      { v:false, label:'Somewhere else',       note:'Standard rates' },
+    ]
+  },
+];
+
+/* ==========================================================================
    HELPERS
    ========================================================================== */
 const $  = s => document.querySelector(s);
 const $$ = s => Array.from(document.querySelectorAll(s));
 const fmt = n => '$' + Number(n).toLocaleString('en-SG', {
   minimumFractionDigits: n % 1 ? 2 : 0, maximumFractionDigits: 2 });
-const hourRate = p => p.hr;
 const crewText = p => {
   const b = [];
   if (p.pg) b.push(p.pg + ' photographer' + (p.pg > 1 ? 's' : ''));
   if (p.vg) b.push(p.vg + ' videographer' + (p.vg > 1 ? 's' : ''));
-  return b.join(', ');
+  return b.join(' · ');
 };
 const showcasePrice = p => p.d5 ? Math.round(p.price * (1 - SHOWCASE_PCT) * 100) / 100 : p.price;
-const byId = id => PACKAGES.find(p => p.id === id);
 
 /* is this a two-shooter package for its own discipline(s)? */
 const isDuo = p => p.kind === 'combo' ? (p.pg > 1 && p.vg > 1) : (p.pg + p.vg) > 1;
@@ -700,107 +500,173 @@ function tierFor(kind, hours, wantDuo) {
 }
 
 /* ==========================================================================
-   SINGLE SOURCE OF TRUTH — the estimate
+   STATE
    ========================================================================== */
-const est = { id: null, extra: 0, pws: false, d5: false, d250: false };
+const ans  = {};            // what the couple answered
+let   step = 0;             // index into the visible questions
+const fine = { hours: 0, duo: false, pws: false, show: false };  // result-screen tweaks
+
+const visible = () => QUESTIONS.filter(q => !q.when || q.when(ans));
 
 function price() {
-  const p = byId(est.id);
-  if (!p) return null;
-  const extraFee = est.extra * hourRate(p);
-  const pwsFee   = est.pws ? PWS_FEE : 0;
-  const d5       = (est.d5 && p.d5) ? Math.round(p.price * SHOWCASE_PCT * 100) / 100 : 0;
-  const d250     = (est.d250 && p.d250) ? SHOWCASE_FLAT : 0;
+  const p = tierFor(ans.kind, fine.hours, fine.duo);
+  const extra    = Math.max(0, fine.hours - p.hours);
+  const extraFee = extra * p.hr;
+  const pwsFee   = fine.pws ? PWS_FEE : 0;
+  const d5       = (fine.show && p.d5)   ? Math.round(p.price * SHOWCASE_PCT * 100) / 100 : 0;
+  const d250     = (fine.show && p.d250) ? SHOWCASE_FLAT : 0;
   const total    = p.price + extraFee + pwsFee - d5 - d250;
-  return { p, extraFee, pwsFee, d5, d250, total,
+  return { p, extra, extraFee, pwsFee, d5, d250, total,
            deposit: Math.round(total * DEPOSIT_PCT * 100) / 100 };
 }
 
-function select(id, opts) {
-  est.id = id;
-  est.extra = (opts && opts.extra) || 0;
-  const p = byId(id);
-  if (!p.d5)   est.d5 = false;
-  if (!p.d250) est.d250 = false;
-  syncAll();
-  openDock(true);
+/* ==========================================================================
+   THE QUESTIONNAIRE
+   ========================================================================== */
+function renderQuestion() {
+  const qs = visible();
+  const q  = qs[step];
+
+  $('#quiz-progress').innerHTML = qs.map((_, i) =>
+    `<span class="pip${i < step ? ' is-done' : ''}"></span>`).join('');
+
+  $('#q-count').textContent = `Question ${step + 1} of ${qs.length}`;
+  $('#q-title').textContent = q.title;
+  $('#q-sub').textContent   = q.sub;
+  $('#q-back').classList.toggle('hidden', step === 0);
+
+  $('#q-options').innerHTML = q.options.map((o, i) => `
+    <button type="button" class="opt" data-i="${i}" aria-pressed="${String(ans[q.id] === o.v)}">
+      <span class="opt-label">${o.label}</span>
+      <span class="opt-note">${o.note}</span>
+    </button>`).join('');
+
+  $$('#q-options .opt').forEach(b => b.addEventListener('click', () => {
+    answer(q, q.options[Number(b.dataset.i)].v);
+  }));
+
+  // re-run the entry animation so each question arrives the same way
+  const stage = $('#quiz-stage');
+  stage.style.animation = 'none';
+  void stage.offsetWidth;
+  stage.style.animation = '';
 }
 
-function clearEst() {
-  est.id = null; est.extra = 0; est.pws = false; est.d5 = false; est.d250 = false;
-  $('#dock').classList.remove('is-up', 'is-open');
-  $('#dock-body').classList.add('hidden');
-  $('#dock-toggle').setAttribute('aria-expanded', 'false');
-  document.body.classList.remove('has-dock');
-  syncAll();
+function answer(q, v) {
+  ans[q.id] = v;
+  // a shorter day takes the second-shooter question off the table entirely
+  if (q.id === 'hours' && v < DUO_FROM) ans.duo = false;
+
+  step++;
+  if (step >= visible().length) showResult();
+  else renderQuestion();
 }
+
+$('#q-back').addEventListener('click', () => {
+  if (step > 0) { step--; renderQuestion(); }
+});
+
+function showResult() {
+  fine.hours = ans.hours;
+  fine.duo   = !!ans.duo;
+  fine.pws   = !!ans.pws;
+  fine.show  = !!ans.show;
+  $('#quiz-stage').classList.add('hidden');
+  $('#quiz-progress').classList.add('hidden');
+  $('#result').classList.remove('hidden');
+  renderResult();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function restart() {
+  Object.keys(ans).forEach(k => delete ans[k]);
+  step = 0;
+  $('#result').classList.add('hidden');
+  $('#quiz-stage').classList.remove('hidden');
+  $('#quiz-progress').classList.remove('hidden');
+  renderQuestion();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+$('#r-restart').addEventListener('click', restart);
+$('#r-browse').addEventListener('click', () => $('#btn-all').click());
 
 /* ==========================================================================
-   THE DOCK
+   THE RECOMMENDATION
    ========================================================================== */
-function openDock(show) {
-  if (show) {
-    $('#dock').classList.add('is-up');
-    document.body.classList.add('has-dock');
-  }
-}
-$('#dock-toggle').addEventListener('click', () => {
-  const body = $('#dock-body'), open = body.classList.toggle('hidden') === false;
-  $('#dock').classList.toggle('is-open', open);
-  $('#dock-toggle').setAttribute('aria-expanded', String(open));
-  $('#dock-hint').textContent = open ? 'Hide breakdown' : 'See breakdown';
-});
-$$('.dock-step').forEach(b => b.addEventListener('click', () => {
-  est.extra = Math.max(0, Math.min(12, est.extra + Number(b.dataset.d)));
-  syncAll();
+$$('.step-btn').forEach(b => b.addEventListener('click', () => {
+  fine.hours = Math.max(1, Math.min(16, fine.hours + Number(b.dataset.d)));
+  if (fine.hours < DUO_FROM) fine.duo = false;
+  renderResult();
 }));
-[['#dock-pws', 'pws'], ['#dock-d5', 'd5'], ['#dock-d250', 'd250']].forEach(([sel, key]) => {
+[['#r-duo', 'duo'], ['#r-pws', 'pws'], ['#r-show', 'show']].forEach(([sel, key]) => {
   $(sel).addEventListener('click', () => {
     if ($(sel).disabled) return;
-    est[key] = !est[key];
-    syncAll();
+    fine[key] = !fine[key];
+    renderResult();
   });
 });
-$('#dock-clear').addEventListener('click', clearEst);
 
-function renderDock() {
-  const r = price();
-  if (!r) { $('#dock-name').textContent = '—'; $('#dock-total').textContent = '$0'; return; }
-  const { p } = r;
+function renderResult() {
+  const r = price(), p = r.p;
+  const duoOK  = fine.hours >= DUO_FROM;
+  const showOK = p.d5 || p.d250;
 
-  $('#dock-name').textContent    = p.name;
-  $('#dock-total').textContent   = fmt(r.total);
-  $('#dock-total-2').textContent = fmt(r.total);
-  $('#dock-deposit').textContent = fmt(r.deposit);
-  $('#dock-hrs').textContent     = est.extra;
+  $('#r-name').textContent  = p.name;
+  $('#r-tag').textContent   = `${p.tag} · ${KIND_STUDIO[p.kind]}`;
+  $('#r-total').textContent = fmt(r.total);
+  $('#r-meta').textContent  =
+    `Up to ${p.hours + r.extra} hours · ${crewText(p)}` +
+    (p.extras.includes('Splittable over 2 days') ? ' · splittable over two days' : '');
+  $('#r-blurb').textContent = p.blurb;
+  $('#r-hours').textContent = fine.hours;
 
-  $('#dock-d5').disabled   = !p.d5;
-  $('#dock-d250').disabled = !p.d250;
-  $('#dock-d5-note').textContent   = p.d5   ? '' : 'photo + film only';
-  $('#dock-d250-note').textContent = p.d250 ? '' : 'from 9 hours';
-  [['#dock-pws', est.pws], ['#dock-d5', est.d5 && p.d5], ['#dock-d250', est.d250 && p.d250]]
+  $('#r-duo').disabled  = !duoOK;
+  $('#r-show').disabled = !showOK;
+  $('#r-duo-note').textContent  = duoOK
+    ? 'A second shooter on each craft you book'
+    : `Offered from ${DUO_FROM} hours of coverage`;
+  $('#r-show-note').textContent = showOK
+    ? [p.d5 ? '5% off' : null, p.d250 ? '$250 off' : null].filter(Boolean).join(' · ')
+    : 'Not offered on this package';
+
+  [['#r-duo', fine.duo && duoOK], ['#r-pws', fine.pws], ['#r-show', fine.show && showOK]]
     .forEach(([sel, on]) => $(sel).setAttribute('aria-pressed', String(on)));
 
   const lines = [[`${p.name} · up to ${p.hours} hrs`, fmt(p.price)]];
-  if (r.extraFee) lines.push([`${est.extra} additional hour${est.extra > 1 ? 's' : ''} · ${fmt(hourRate(p))}/hr`, fmt(r.extraFee)]);
+  if (r.extraFee) lines.push([`${r.extra} additional hour${r.extra > 1 ? 's' : ''} · ${fmt(p.hr)}/hr`, fmt(r.extraFee)]);
   if (r.pwsFee)   lines.push(['Pre-wedding shoot', fmt(r.pwsFee)]);
   if (r.d5)       lines.push(['Showcase 5% off', '−' + fmt(r.d5)]);
   if (r.d250)     lines.push(['$250 showcase discount', '−' + fmt(r.d250)]);
 
-  $('#dock-lines').innerHTML = lines.map(([k, v]) => {
+  $('#r-lines').innerHTML = lines.map(([k, v]) => {
     const cut = v.startsWith('−');
     return `<div class="flex items-baseline justify-between gap-4">
-      <dt class="${cut ? 'text-cream' : 'text-cream/70'}">${k}</dt>
-      <dd class="font-medium whitespace-nowrap ${cut ? 'text-cream' : ''}">${v}</dd></div>`;
+      <dt class="${cut ? 'text-sage' : 'text-stone-500'}">${k}</dt>
+      <dd class="font-medium whitespace-nowrap ${cut ? 'text-sage' : 'text-ink'}">${v}</dd></div>`;
   }).join('');
+
+  $('#r-total-2').textContent = fmt(r.total);
+  $('#r-deposit').textContent = fmt(r.deposit);
+
+  const groups = [];
+  if (p.photo.length) groups.push(['Photography', p.photo]);
+  if (p.film.length)  groups.push(['Film', p.film]);
+  if (fine.pws)       groups.push(['Before the day', ['Pre-wedding shoot · 2 hours, one location', 'Unlimited edited photographs', 'Online photo gallery']]);
+  $('#r-includes').innerHTML = groups.map(([h, list]) => `
+    <div>
+      <p class="text-[9px] font-bold uppercase tracking-widest text-sage mb-2">${h}</p>
+      <ul class="space-y-1.5 text-xs text-stone-600">
+        ${list.map(x => `<li class="flex gap-3"><span class="text-gold">✦</span> ${x}</li>`).join('')}
+      </ul>
+    </div>`).join('');
 }
 
-$('#dock-copy').addEventListener('click', async () => {
-  const r = price(); if (!r) return;
-  const btn = $('#dock-copy');
-  const lines = Array.from($('#dock-lines').children).map(d => `${d.children[0].textContent}: ${d.children[1].textContent}`);
+$('#r-copy').addEventListener('click', async () => {
+  const r = price(), btn = $('#r-copy');
+  const lines = Array.from($('#r-lines').children)
+    .map(d => `${d.children[0].textContent}: ${d.children[1].textContent}`);
   const txt = ['Natsuku × ThroughWebbedLens — Estimate', r.p.name,
-    `Up to ${r.p.hours + est.extra} hours · ${crewText(r.p)}`, '', ...lines, '',
+    `Up to ${r.p.hours + r.extra} hours · ${crewText(r.p)}`, '', ...lines, '',
     `Total: ${fmt(r.total)}`, `30% deposit to reserve: ${fmt(r.deposit)}`, '',
     'Indicative estimate in SGD.'].join('\n');
   try { await navigator.clipboard.writeText(txt); btn.textContent = 'Copied ✓'; }
@@ -819,102 +685,71 @@ $$('.tab-btn').forEach(btn => btn.addEventListener('click', () => {
   btn.classList.add('is-active');
   btn.setAttribute('aria-selected', 'true');
   $('#' + btn.getAttribute('aria-controls')).classList.add('is-active');
-  if (btn.id === 'btn-builder' && !est.id) applyBuilder();
-  observeReveals();
-}));
-$$('[data-goto-builder]').forEach(b => b.addEventListener('click', () => {
-  $('#btn-builder').click();
   window.scrollTo({ top: 0, behavior: 'smooth' });
+  observeReveals();
 }));
 
 /* ==========================================================================
-   PACKAGE CARDS
+   ALL PACKAGES — one quiet row each, opened on tap
    ========================================================================== */
-function cardHTML(p, i) {
-  const badge = p.featured ? `
-    <div class="absolute top-0 right-0 bg-sage text-cream px-3 py-2 rounded-bl-2xl rounded-tr-[2rem] flex items-center gap-2">
-      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
-      <span class="text-[8px] font-bold uppercase tracking-widest">Popular</span>
-    </div>` : '';
-  const items = p.kind === 'combo'
-    ? [['Photography', p.photo], ['Film', p.film]]
-    : [[null, p.kind === 'photo' ? p.photo : p.film]];
-  const body = items.map(([h, list]) => `
-      ${h ? `<p class="text-[9px] font-bold uppercase tracking-widest text-sage mt-4 mb-2 first:mt-0">${h}</p>` : ''}
-      <ul class="space-y-2 text-xs text-stone-600">
-        ${list.map(x => `<li class="flex gap-3"><span class="text-gold">✦</span> ${x}</li>`).join('')}
-      </ul>`).join('');
+function renderPackages() {
+  $('#pkg-groups').innerHTML = ['combo', 'photo', 'video'].map(kind => {
+    const list = PACKAGES.filter(p => p.kind === kind);
+    return `
+      <div class="pkg-group mb-10" data-group="${kind}">
+        <div class="flex items-baseline gap-3 mb-4">
+          <h3 class="font-serif text-xl">${KIND_LABEL[kind]}</h3>
+          <span class="text-[9px] font-bold uppercase tracking-widest text-stone-400">${KIND_STUDIO[kind]}</span>
+        </div>
+        <div class="space-y-3">${list.map(rowHTML).join('')}</div>
+      </div>`;
+  }).join('');
+
+  $$('.pkg-head').forEach(btn => btn.addEventListener('click', () => {
+    const row = btn.closest('.pkg-row');
+    btn.setAttribute('aria-expanded', String(row.classList.toggle('is-open')));
+  }));
+}
+
+function rowHTML(p) {
+  const groups = [];
+  if (p.photo.length) groups.push(['Photography', p.photo]);
+  if (p.film.length)  groups.push(['Film', p.film]);
+  const body = groups.map(([h, list]) => `
+    <p class="text-[9px] font-bold uppercase tracking-widest text-sage mt-4 mb-2 first:mt-0">${h}</p>
+    <ul class="space-y-1.5 text-xs text-stone-600">
+      ${list.map(x => `<li class="flex gap-3"><span class="text-gold">✦</span> ${x}</li>`).join('')}
+    </ul>`).join('');
   const chips = p.extras.length ? `
-    <div class="flex flex-wrap gap-2 mb-4">
+    <div class="flex flex-wrap gap-2 mt-4">
       ${p.extras.map(x => `<span class="text-[9px] font-bold uppercase tracking-widest text-sage bg-sage-mist/60 px-3 py-1.5 rounded-full">${x}</span>`).join('')}
     </div>` : '';
 
   return `
-  <article data-pkg="${p.id}" data-kind="${p.kind}"
-           class="pkg-card reveal bg-white p-8 rounded-[2rem] border ${p.featured ? 'is-featured' : 'border-stone-200'} relative flex flex-col">
-      ${badge}
-      <div class="flex items-baseline justify-between mb-1">
-          <h3 class="text-2xl font-serif">${p.name}</h3>
-          <span class="text-[9px] font-bold tracking-[0.2em] text-stone-300 ${p.featured ? 'mr-24' : ''}">${String(i + 1).padStart(2, '0')}</span>
-      </div>
-      <p class="text-[9px] uppercase tracking-widest ${p.featured ? 'text-sage font-bold' : 'text-stone-400'} mb-6">${p.tag}</p>
-      <div class="mb-2 flex items-baseline gap-2 flex-wrap">
-          <span class="text-3xl font-light">${fmt(p.price)}</span>
-          <span class="text-[10px] font-bold uppercase tracking-widest text-stone-400">up to ${p.hours} hrs</span>
-      </div>
-      ${p.d5 ? `<p class="text-[10px] font-bold uppercase tracking-widest text-sage mb-4">${fmt(showcasePrice(p))} at the showcase</p>` : '<div class="mb-4"></div>'}
+  <div class="pkg-row bg-white rounded-[1.5rem] border border-stone-200 overflow-hidden">
+    <button type="button" class="pkg-head w-full text-left p-5 flex items-center gap-4" aria-expanded="false">
+      <span class="min-w-0 flex-1">
+        <span class="flex items-baseline gap-2 flex-wrap">
+          <span class="font-serif text-lg leading-tight">${p.name}</span>
+          ${p.featured ? '<span class="text-[8px] font-bold uppercase tracking-widest text-cream bg-sage px-2 py-1 rounded-full">Popular</span>' : ''}
+        </span>
+        <span class="block text-[10px] uppercase tracking-widest text-stone-400 mt-1">Up to ${p.hours} hrs · ${crewText(p)}</span>
+      </span>
+      <span class="text-right shrink-0">
+        <span class="block text-lg font-light">${fmt(p.price)}</span>
+        ${p.d5 ? `<span class="block text-[9px] font-bold uppercase tracking-widest text-sage mt-0.5">${fmt(showcasePrice(p))} at showcase</span>` : ''}
+      </span>
+      <span class="pkg-icon text-lg leading-none text-sage shrink-0" aria-hidden="true">+</span>
+    </button>
+    <div class="pkg-body"><div><div class="px-5 pb-6">
+      <p class="text-xs text-stone-500 italic leading-relaxed mb-4">${p.blurb}</p>
+      ${body}
       ${chips}
-      <p class="text-xs text-stone-500 italic mb-6 leading-relaxed">${p.blurb}</p>
-      <button type="button" class="pkg-pick w-full text-[10px] font-bold uppercase tracking-[0.2em] border border-sage text-sage px-5 py-3 rounded-full hover:bg-sage hover:text-cream transition-colors mb-4">Add to estimate</button>
-      <button type="button" class="pkg-toggle mt-auto flex items-center justify-between w-full pt-5 border-t border-stone-100 text-[10px] font-bold uppercase tracking-widest text-sage" aria-expanded="false">
-          <span>What's Included</span>
-          <span class="pkg-toggle-icon text-base leading-none" aria-hidden="true">+</span>
-      </button>
-      <div class="pkg-body"><div><div class="pt-5">${body}</div></div></div>
-  </article>`;
+      <p class="text-[10px] text-stone-400 mt-5 uppercase tracking-widest">Additional hours · ${fmt(p.hr)}/hr</p>
+    </div></div></div>
+  </div>`;
 }
 
-function renderCards() {
-  $('#pkg-groups').innerHTML = ['combo', 'photo', 'video'].map(kind => {
-    const list = PACKAGES.filter(p => p.kind === kind);
-    return `
-      <div class="pkg-group mb-14" data-group="${kind}">
-        <div class="reveal flex items-baseline gap-4 mb-6">
-          <h3 class="font-serif text-2xl">${KIND_LABEL[kind]}</h3>
-          <span class="text-[9px] font-bold uppercase tracking-widest text-stone-400">${KIND_STUDIO[kind]}</span>
-        </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-start">
-          ${list.map(cardHTML).join('')}
-        </div>
-      </div>`;
-  }).join('');
-
-  $$('.pkg-toggle').forEach(btn => btn.addEventListener('click', () => {
-    const card = btn.closest('.pkg-card');
-    btn.setAttribute('aria-expanded', String(card.classList.toggle('is-open')));
-  }));
-  $$('.pkg-pick').forEach(btn => btn.addEventListener('click', () => {
-    select(btn.closest('.pkg-card').dataset.pkg);
-  }));
-  observeReveals();
-}
-
-function markChosen() {
-  $$('.pkg-card').forEach(c => {
-    const on = c.dataset.pkg === est.id;
-    c.classList.toggle('is-chosen', on);
-    const b = c.querySelector('.pkg-pick');
-    if (b) {
-      b.textContent = on ? 'In your estimate ✓' : 'Add to estimate';
-      b.classList.toggle('bg-sage', on);
-      b.classList.toggle('text-cream', on);
-    }
-  });
-  $$('[data-inc-pick]').forEach(b => b.classList.toggle('text-sage', b.dataset.incPick === est.id));
-  $$('#cmp-body tr').forEach(tr => tr.classList.toggle('cmp-col-featured', tr.dataset.pkg === est.id));
-}
-
-/* studio filter — drives Cards and Inclusions */
 $$('.cat-btn').forEach(btn => btn.addEventListener('click', () => {
   const cat = btn.dataset.cat;
   $$('.cat-btn').forEach(b => {
@@ -925,227 +760,7 @@ $$('.cat-btn').forEach(btn => btn.addEventListener('click', () => {
     b.classList.toggle('text-stone-400', !on);
   });
   $$('.pkg-group').forEach(g => g.classList.toggle('hidden', cat !== 'all' && g.dataset.group !== cat));
-  $$('.inc-group').forEach(g => g.classList.toggle('hidden', cat !== 'all' && g.dataset.group !== cat));
 }));
-
-/* view switch */
-$$('.view-btn').forEach(btn => btn.addEventListener('click', () => {
-  const v = btn.dataset.view;
-  $$('.view-btn').forEach(b => {
-    const on = b === btn;
-    b.setAttribute('aria-pressed', String(on));
-    b.classList.toggle('bg-sage', on);
-    b.classList.toggle('text-cream', on);
-    b.classList.toggle('text-stone-400', !on);
-  });
-  $('#cards-view').classList.toggle('hidden', v !== 'cards');
-  $('#inclusions-view').classList.toggle('hidden', v !== 'inclusions');
-  $('#compare-view').classList.toggle('hidden', v !== 'compare');
-  $('#studio-filter').classList.toggle('hidden', v === 'compare');
-  observeReveals();
-}));
-
-/* ==========================================================================
-   INCLUSIONS MATRIX
-   ========================================================================== */
-const PHOTO_ROWS = ['Unlimited edited photographs','Online photo gallery','Itinerary planning',
-  '20 × 4R photo album','2 × magnetic polaroid','20 × Instax album','10 × next-day sneak preview','2 photographers'];
-const FILM_ROWS  = ['1 min film','1–2 min film','1 min vertical film','3–5 min wedding film',
-  'Thumbdrive + keepsake pouch','2 videographers'];
-
-function renderInclusions() {
-  $('#inc-groups').innerHTML = ['combo', 'photo', 'video'].map(kind => {
-    const list = PACKAGES.filter(p => p.kind === kind);
-    const head = `<tr class="text-[9px] uppercase tracking-widest text-stone-400">
-        <th scope="col" class="inc-sticky p-4 font-bold text-left min-w-[190px]">Inclusion</th>
-        ${list.map(p => `<th scope="col" class="p-4 font-bold text-center min-w-[118px]">
-            <button type="button" data-inc-pick="${p.id}" class="inc-pick font-serif text-sm normal-case tracking-normal text-ink leading-tight">${p.name}</button>
-          </th>`).join('')}
-      </tr>`;
-
-    const valueRow = (label, fn) => `<tr>
-        <th scope="row" class="inc-sticky p-4 text-left font-semibold text-ink text-xs">${label}</th>
-        ${list.map(p => `<td class="p-4 text-center text-xs font-semibold text-ink">${fn(p)}</td>`).join('')}
-      </tr>`;
-
-    const tickRow = (label, listKey) => {
-      if (!list.some(p => p[listKey].includes(label))) return '';
-      return `<tr>
-        <th scope="row" class="inc-sticky p-4 text-left font-normal text-xs text-stone-600">${label}</th>
-        ${list.map(p => `<td class="p-4 text-center">${p[listKey].includes(label)
-            ? '<span class="text-gold text-base">✦</span>'
-            : '<span class="text-stone-300">—</span>'}</td>`).join('')}
-      </tr>`;
-    };
-
-    const section = t => `<tr><th scope="row" colspan="${list.length + 1}"
-        class="inc-sticky p-3 pl-4 text-left text-[9px] font-bold uppercase tracking-widest text-sage bg-sage-mist/40">${t}</th></tr>`;
-
-    const photoRows = PHOTO_ROWS.map(r => tickRow(r, 'photo')).join('');
-    const filmRows  = FILM_ROWS.map(r => tickRow(r, 'film')).join('');
-
-    return `
-      <div class="inc-group mb-12" data-group="${kind}">
-        <div class="flex items-baseline gap-4 mb-4">
-          <h3 class="font-serif text-2xl">${KIND_LABEL[kind]}</h3>
-          <span class="text-[9px] font-bold uppercase tracking-widest text-stone-400">${KIND_STUDIO[kind]}</span>
-        </div>
-        <div class="overflow-x-auto bg-white rounded-[2rem] border border-stone-200 p-2">
-          <table class="inc-table w-full text-left">
-            <thead>${head}</thead>
-            <tbody>
-              ${valueRow('Coverage', p => 'Up to ' + p.hours + ' hrs')}
-              ${valueRow('Investment', p => fmt(p.price))}
-              ${valueRow('At the showcase', p => p.d5 ? fmt(showcasePrice(p)) : '—')}
-              ${valueRow('Additional hour', p => fmt(hourRate(p)) + '/hr')}
-              ${photoRows ? section('Photography deliverables') + photoRows : ''}
-              ${filmRows ? section('Film deliverables') + filmRows : ''}
-              ${section('The day')}
-              ${tickRow('Splittable over 2 days', 'extras')}
-              ${tickRow('1 Location', 'extras')}
-              <tr>
-                <th scope="row" class="inc-sticky p-4 text-left font-normal text-xs text-stone-600">$250 showcase discount</th>
-                ${list.map(p => `<td class="p-4 text-center">${p.d250
-                    ? '<span class="text-gold text-base">✦</span>'
-                    : '<span class="text-stone-300">—</span>'}</td>`).join('')}
-              </tr>
-              <tr>
-                <th scope="row" class="inc-sticky p-4 text-left text-xs"></th>
-                ${list.map(p => `<td class="p-3 text-center">
-                    <button type="button" data-inc-pick="${p.id}" class="text-[9px] font-bold uppercase tracking-widest border border-sage text-sage px-3 py-2 rounded-full hover:bg-sage hover:text-cream transition-colors">Add</button>
-                  </td>`).join('')}
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>`;
-  }).join('');
-
-  $$('[data-inc-pick]').forEach(b => b.addEventListener('click', () => select(b.dataset.incPick)));
-}
-
-/* ==========================================================================
-   COMPARISON TABLE
-   ========================================================================== */
-function renderCompare() {
-  $('#cmp-body').innerHTML = PACKAGES.map(p => `
-    <tr data-pkg="${p.id}">
-      <th scope="row" class="p-4 font-semibold text-ink text-left">${p.name}</th>
-      <td class="p-4 text-[10px] uppercase tracking-widest text-stone-400">${KIND_STUDIO[p.kind]}</td>
-      <td class="p-4">Up to ${p.hours} hrs</td>
-      <td class="p-4">${crewText(p)}</td>
-      <td class="p-4 text-right font-semibold text-ink">${fmt(p.price)}</td>
-      <td class="p-4 text-right ${p.d5 ? 'text-sage font-semibold' : 'text-stone-300'}">${p.d5 ? fmt(showcasePrice(p)) : '—'}</td>
-      <td class="p-4 text-right">${fmt(hourRate(p))}</td>
-      <td class="p-4 text-right">
-        <button type="button" data-cmp-pick="${p.id}" class="text-[9px] font-bold uppercase tracking-widest border border-sage text-sage px-3 py-2 rounded-full hover:bg-sage hover:text-cream transition-colors whitespace-nowrap">Add</button>
-      </td>
-    </tr>`).join('');
-  $$('[data-cmp-pick]').forEach(b => b.addEventListener('click', () => select(b.dataset.cmpPick)));
-}
-
-/* ==========================================================================
-   HOUR FINDER
-   ========================================================================== */
-let finderKind = 'combo';
-$$('.finder-kind').forEach(btn => btn.addEventListener('click', () => {
-  finderKind = btn.dataset.kind;
-  $$('.finder-kind').forEach(b => {
-    const on = b === btn;
-    b.setAttribute('aria-pressed', String(on));
-    b.classList.toggle('text-cream/60', !on);
-  });
-  updateFinder();
-}));
-$('#finder-hours').addEventListener('input', updateFinder);
-$('#finder-add').addEventListener('click', () => {
-  const h = Number($('#finder-hours').value);
-  const p = tierFor(finderKind, h, false);
-  select(p.id);
-});
-
-function updateFinder() {
-  const h = Number($('#finder-hours').value);
-  const p = tierFor(finderKind, h, false);
-  $('#finder-hours-label').textContent = h + (h === 1 ? ' hour' : ' hours');
-  $('#finder-name').textContent = p.name;
-  $('#finder-price').textContent = fmt(p.price);
-}
-
-/* ==========================================================================
-   BUILDER  — writes into the same estimate
-   ========================================================================== */
-const bld = { kind: 'combo', hours: 9, duo: false };
-
-$$('.bld-kind').forEach(btn => btn.addEventListener('click', () => {
-  bld.kind = btn.dataset.kind;
-  $$('.bld-kind').forEach(b => b.setAttribute('aria-pressed', String(b === btn)));
-  applyBuilder();
-}));
-$('#bld-hours').addEventListener('input', e => { bld.hours = Number(e.target.value); applyBuilder(); });
-$('#ao-duo').addEventListener('click', () => {
-  if ($('#ao-duo').disabled) return;
-  bld.duo = !bld.duo; applyBuilder();
-});
-[['#ao-pws', 'pws'], ['#ao-d5', 'd5'], ['#ao-d250', 'd250']].forEach(([sel, key]) => {
-  $(sel).addEventListener('click', () => {
-    if ($(sel).disabled) return;
-    est[key] = !est[key];
-    syncAll();
-  });
-});
-
-function applyBuilder() {
-  const duoOK = bld.hours >= 10;
-  if (!duoOK) bld.duo = false;
-  const p = tierFor(bld.kind, bld.hours, bld.duo);
-  est.id = p.id;
-  est.extra = Math.max(0, bld.hours - p.hours);
-  if (!p.d5)   est.d5 = false;
-  if (!p.d250) est.d250 = false;
-  syncAll();
-  openDock(true);
-}
-
-function renderBuilder() {
-  const r = price();
-  const duoOK = bld.hours >= 10;
-  $('#ao-duo').disabled = !duoOK;
-  $('#ao-duo').setAttribute('aria-pressed', String(bld.duo));
-  $('#ao-duo-note').textContent = duoOK ? 'A second shooter on each team you book' : 'Available from 10 hours of coverage';
-  $('#bld-hours-out').textContent = bld.hours;
-  $('#bld-hours').value = bld.hours;
-
-  if (!r) { $('#bld-tier-note').textContent = ''; $('#bld-includes').innerHTML = ''; return; }
-  const { p } = r;
-
-  $('#ao-d5').disabled   = !p.d5;
-  $('#ao-d250').disabled = !p.d250;
-  $('#ao-d5-note').textContent   = p.d5   ? 'On photo + film packages' : 'Photo + film packages only';
-  $('#ao-d250-note').textContent = p.d250 ? 'Stacks with the 5%'       : 'From 9 hours of coverage';
-  [['#ao-pws', est.pws], ['#ao-d5', est.d5 && p.d5], ['#ao-d250', est.d250 && p.d250]]
-    .forEach(([sel, on]) => $(sel).setAttribute('aria-pressed', String(on)));
-
-  $('#bld-tier-note').textContent = est.extra
-    ? `Lands you in ${p.name}, plus ${est.extra} additional hour${est.extra > 1 ? 's' : ''} at ${fmt(hourRate(p))}/hr.`
-    : `Lands you in ${p.name}.`;
-
-  const inc = p.kind === 'combo' ? p.photo.concat(p.film) : (p.kind === 'photo' ? p.photo : p.film);
-  const all = est.pws ? inc.concat(['Pre-wedding shoot · 2 hrs, 1 location']) : inc;
-  $('#bld-includes').innerHTML = all.map(x => `<li class="flex gap-3"><span class="text-gold">✦</span> ${x}</li>`).join('');
-}
-
-/* ==========================================================================
-   SYNC
-   ========================================================================== */
-function syncAll() { renderDock(); renderBuilder(); markChosen(); }
-
-$('#bld-open-dock').addEventListener('click', () => {
-  if (!est.id) applyBuilder();
-  openDock(true);
-  if ($('#dock-body').classList.contains('hidden')) $('#dock-toggle').click();
-  $('#dock').scrollIntoView({ block: 'nearest' });
-});
 
 /* ==========================================================================
    TIMELINE
@@ -1153,7 +768,7 @@ $('#bld-open-dock').addEventListener('click', () => {
 function renderTimeline() {
   $('#tl-list').innerHTML = TIMELINE.map(([title, body], i) => {
     const n = i + 1, right = i % 2 === 1;
-    return `<li class="reveal md:grid md:grid-cols-[1fr_auto_1fr] md:gap-8 md:items-center md:min-h-[9rem]">
+    return `<li class="reveal md:grid md:grid-cols-[1fr_auto_1fr] md:gap-8 md:items-center md:min-h-[8rem]">
       <div class="${right ? 'md:col-start-3 md:text-left' : 'md:col-start-1 md:text-right'}">
         <p class="text-[9px] font-bold uppercase tracking-[0.25em] text-stone-400 mb-2">Stage ${String(n).padStart(2, '0')}</p>
         <h3 class="font-serif text-xl mb-2">${title}</h3>
@@ -1180,12 +795,9 @@ function observeReveals() {
 /* ==========================================================================
    INIT
    ========================================================================== */
-renderCards();
-renderInclusions();
-renderCompare();
+renderQuestion();
+renderPackages();
 renderTimeline();
-updateFinder();
-syncAll();
 observeReveals();
 </script>
 </body>
