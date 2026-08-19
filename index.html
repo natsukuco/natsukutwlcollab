@@ -306,7 +306,7 @@
         </p>
         <h3 class="text-[10px] font-bold uppercase tracking-[0.25em] text-sage mb-1">Add to any package</h3>
         <p class="text-xs text-stone-600 leading-relaxed">
-            Additional hours from $250/hr ($500/hr for photo + film, $1,000/hr for Director's Cut) ·
+            Additional hours, should the day run long ·
             Pre-wedding shoot at $1,020 for two hours at one location, photographed and filmed
         </p>
     </div>
@@ -356,7 +356,7 @@
         <a href="https://maps.app.goo.gl/2jhCvsvyrYShcupk6?g_st=ac" target="_blank" rel="noopener" class="border-b border-cream/30 hover:border-cream hover:text-cream transition-colors pb-1">Reviews</a>
     </div>
     <p class="text-[10px] leading-relaxed max-w-2xl mx-auto">
-        All rates in SGD. Additional hours from $250/hr. 30% non-refundable deposit to secure date.<br>
+        All rates in SGD. 30% non-refundable deposit to secure date.<br>
         Postponements allowed indefinitely subject to availability.
     </p>
     <p class="text-[10px] uppercase tracking-[0.25em] mt-8 text-cream/40">Natsuku Photography — Hakim &nbsp;·&nbsp; ThroughWebbedLens — Raudah</p>
@@ -450,7 +450,7 @@ const TIMELINE = [
   ['Deposit','A 30% non-refundable deposit is required to secure your specific date on our calendar.'],
   ['Consultation','Complimentary itinerary consultation via Zoom, call, or face-to-face to align on your vision.'],
   ['The Wedding Day','Fly-on-the-wall coverage focused on authenticity and conversations rather than traditional poses.'],
-  ['Post-Production','Detailed editing and curation with a standard 4 to 6 weeks lead time for delivery.'],
+  ['Post-Production','Detailed editing and curation. Photographs have a standard 4 to 6 weeks lead time; films take about 2 to 4 months.'],
   ['Delivery','Receive your private online gallery link via email to relive your moments forever.'],
 ];
 
@@ -465,7 +465,7 @@ const QUESTIONS = [
     options: [
       { v:'combo', label:'Photographs and a film', note:'Natsuku × ThroughWebbedLens, working as one team' },
       { v:'photo', label:'Photographs only',       note:'Natsuku' },
-      { v:'video', label:'A film only',            note:'ThroughWebbedLens' },
+      { v:'video', label:'Film only',              note:'ThroughWebbedLens' },
     ]
   },
   {
@@ -674,7 +674,7 @@ function renderResult() {
     .forEach(([sel, on]) => $(sel).setAttribute('aria-pressed', String(on)));
 
   const lines = [[`${p.name} · up to ${p.hours} hrs`, fmt(p.price)]];
-  if (r.extraFee) lines.push([`${r.extra} additional hour${r.extra > 1 ? 's' : ''} · ${fmt(p.hr)}/hr`, fmt(r.extraFee)]);
+  if (r.extraFee) lines.push([`${r.extra} additional hour${r.extra > 1 ? 's' : ''}`, fmt(r.extraFee)]);
   if (r.pwsFee)   lines.push(['Pre-wedding shoot', fmt(r.pwsFee)]);
   if (r.d5)       lines.push(['Showcase 5% off', '−' + fmt(r.d5)]);
   if (r.d250)     lines.push(['$250 showcase discount', '−' + fmt(r.d250)]);
@@ -786,7 +786,6 @@ function rowHTML(p) {
       <p class="text-xs text-stone-500 italic leading-relaxed mb-4">${p.blurb}</p>
       ${body}
       ${chips}
-      <p class="text-[10px] text-stone-400 mt-5 uppercase tracking-widest">Additional hours · ${fmt(p.hr)}/hr</p>
     </div></div></div>
   </div>`;
 }
@@ -845,7 +844,6 @@ function renderIncPanel() {
     ...(p.extras.includes('1 Location') ? [['Locations', 'One']] : []),
     ['Investment', fmt(p.price)],
     ['At the showcase', showcaseOffer(p) ? fmt(showcasePrice(p)) : '—'],
-    ['Additional hour', fmt(p.hr) + '/hr'],
   ].map(([k, v]) => `
     <div class="flex items-baseline justify-between gap-4 py-2 border-b border-stone-100 last:border-0">
       <dt class="text-xs text-stone-500">${k}</dt>
