@@ -369,7 +369,7 @@
 const PWS_FEE      = 1020;   // pre-wedding shoot
 const DEPOSIT_PCT  = 0.30;
 const SHOWCASE_PCT = 0.05;   // Hitcheed discount — photo + film packages only
-const SHOWCASE_FLAT= 250;    // flat showcase discount — longer packages only
+const SHOWCASE_FLAT= 250;    // flat showcase discount — longer photo + film packages only
 
 const PHOTO_STD = ['Unlimited edited photographs','Online photo gallery','Itinerary planning','20 × 4R photo album','2 × magnetic polaroid'];
 const PHOTO_MIN = ['Unlimited edited photographs','Online photo gallery'];
@@ -410,13 +410,13 @@ const PACKAGES = [
     photo:PHOTO_STD, film:[], extras:[], d5:false, d250:false },
   { id:'adore',     kind:'photo', name:'Adore',        tag:'Most Requested',     hours:9,  price:1788, pg:1, vg:0, hr:250, featured:true,
     blurb:'Our most requested package for comprehensive day-to-night storytelling.',
-    photo:PHOTO_STD, film:[], extras:[], d5:false, d250:true },
+    photo:PHOTO_STD, film:[], extras:[], d5:false, d250:false },
   { id:'beloved',   kind:'photo', name:'Beloved',      tag:'The Complete Story', hours:12, price:2388, pg:1, vg:0, hr:250,
     blurb:'Capture every single moment from the crack of dawn to the final toast.',
-    photo:PHOTO_STD.concat(BELOVED_X), film:[], extras:['Splittable over 2 days'], d5:false, d250:true },
+    photo:PHOTO_STD.concat(BELOVED_X), film:[], extras:['Splittable over 2 days'], d5:false, d250:false },
   { id:'beloved-duo',kind:'photo',name:'Beloved Duo',  tag:'Two Storytellers',   hours:12, price:3588, pg:2, vg:0, hr:250,
     blurb:'Everything in Beloved, with a second photographer so no glance goes unseen.',
-    photo:['2 photographers'].concat(PHOTO_STD, BELOVED_X), film:[], extras:['2 Photographers','Splittable over 2 days'], d5:false, d250:true },
+    photo:['2 photographers'].concat(PHOTO_STD, BELOVED_X), film:[], extras:['2 Photographers','Splittable over 2 days'], d5:false, d250:false },
 
   /* ---------- FILM ONLY (ThroughWebbedLens) ---------- */
   { id:'prelude-v', kind:'video', name:'Prelude (Video Only)', tag:'The Opening Frame', hours:2, price:520, pg:0, vg:1, hr:250,
@@ -430,13 +430,13 @@ const PACKAGES = [
     photo:[], film:FILM_STD, extras:[], d5:false, d250:false },
   { id:'narrative-v',kind:'video',name:'The Narrative (Video Only)', tag:'Most Requested', hours:9, price:2060, pg:0, vg:1, hr:250, featured:true,
     blurb:'Day-to-night filming, the most requested length for a full wedding film.',
-    photo:[], film:FILM_STD, extras:[], d5:false, d250:true },
+    photo:[], film:FILM_STD, extras:[], d5:false, d250:false },
   { id:'complete-v',kind:'video', name:'The Complete Story (Video Only)', tag:'Dawn to Last Dance', hours:12, price:2510, pg:0, vg:1, hr:250,
     blurb:'Every moment filmed, from the crack of dawn to the final toast.',
-    photo:[], film:FILM_STD, extras:['Splittable over 2 days'], d5:false, d250:true },
+    photo:[], film:FILM_STD, extras:['Splittable over 2 days'], d5:false, d250:false },
   { id:'director-v',kind:'video', name:"Director's Cut (Video Only)", tag:'Two Storytellers', hours:12, price:4370, pg:0, vg:2, hr:250,
     blurb:'A full day filmed by two, so both sides of the morning are covered at once.',
-    photo:[], film:['2 videographers'].concat(FILM_STD), extras:['2 Videographers','Splittable over 2 days'], d5:false, d250:true },
+    photo:[], film:['2 videographers'].concat(FILM_STD), extras:['2 Videographers','Splittable over 2 days'], d5:false, d250:false },
 ];
 
 const KIND_LABEL  = { combo:'Photo + Film', photo:'Photography Only', video:'Film Only' };
@@ -502,7 +502,8 @@ const QUESTIONS = [
   {
     id: 'show',
     title: 'Are you booking with us at the Hitcheed showcase?',
-    sub: 'Showcase couples get 5% off photo and film packages, and $250 off the longer ones.',
+    sub: 'Showcase couples take 5% off the package, and $250 more off the longer ones.',
+    when: a => a.kind === 'combo',
     options: [
       { v:true,  label:'Yes, at the showcase', note:'Apply showcase pricing' },
       { v:false, label:'Somewhere else',       note:'Standard rates' },
@@ -858,12 +859,17 @@ function renderIncPanel() {
       return `<div class="inc-row">${mark(on)}<span class="text-xs leading-relaxed ${on ? 'text-stone-700' : 'text-stone-400'}">${x}</span></div>`;
     }).join('')}</div>`;
 
-  const day = [
-    ['Splittable over two days', p.extras.includes('Splittable over 2 days')],
-    ['5% showcase discount', p.d5],
-    ['$250 showcase discount', p.d250],
-  ].map(([label, on]) =>
+  const ticks = list => list.map(([label, on]) =>
     `<div class="inc-row">${mark(on)}<span class="text-xs leading-relaxed ${on ? 'text-stone-700' : 'text-stone-400'}">${label}</span></div>`).join('');
+
+  const day = ticks([
+    ['Splittable over two days', p.extras.includes('Splittable over 2 days')],
+  ]);
+
+  const showcase = ticks([
+    ['5% off the package', p.d5],
+    ['$250 off the package', p.d250],
+  ]);
 
   $('#inc-panel').innerHTML = `
     <h2 class="font-serif text-2xl leading-tight mb-1">${p.name}</h2>
@@ -872,7 +878,9 @@ function renderIncPanel() {
     ${p.kind !== 'video' ? rows('Photography', PHOTO_ROWS, p.photo) : ''}
     ${p.kind !== 'photo' ? rows('Film', FILM_ROWS, p.film) : ''}
     <p class="text-[9px] font-bold uppercase tracking-widest text-sage mt-7 mb-1">The day</p>
-    <div>${day}</div>`;
+    <div>${day}</div>
+    <p class="text-[9px] font-bold uppercase tracking-widest text-sage mt-7 mb-1">Hitcheed showcase offers</p>
+    <div>${showcase}</div>`;
 }
 
 $$('.inc-cat').forEach(btn => btn.addEventListener('click', () => {
