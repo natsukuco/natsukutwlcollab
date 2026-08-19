@@ -118,6 +118,21 @@
     /* segmented filter */
     .seg-btn { transition: color .3s ease, background-color .3s ease; }
 
+    /* Inclusions — package pills and tick rows */
+    .inc-pill {
+        font-size: .625rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+        padding: .55rem 1rem; border-radius: 999px; border: 1px solid #e2e0d8; background: #fff;
+        color: #8b8f89; cursor: pointer;
+        transition: color .25s ease, border-color .25s ease, background-color .25s ease;
+    }
+    .inc-pill:hover { border-color: var(--sage); color: var(--sage); }
+    .inc-pill[aria-pressed="true"] { background: var(--sage); border-color: var(--sage); color: #f1e8d7; }
+    .inc-row { display: flex; align-items: flex-start; gap: .75rem; padding: .6rem 0; border-bottom: 1px solid #f2f0ea; }
+    .inc-row:last-child { border-bottom: 0; }
+    .inc-mark { width: 1rem; flex: none; text-align: center; line-height: 1.35; }
+    .inc-on  { color: var(--gold); }
+    .inc-off { color: #d6d3ca; }
+
     /* Timeline */
     .timeline-line { background: linear-gradient(to bottom, transparent, var(--mist) 8%, var(--mist) 92%, transparent); }
 
@@ -154,11 +169,13 @@
 
     <div class="flex justify-center border-b border-stone-200 max-w-md mx-auto" role="tablist" aria-label="Rate card sections">
         <button role="tab" aria-selected="true" aria-controls="fit" id="btn-fit"
-                class="tab-btn is-active px-4 sm:px-6 py-3 text-[10px] sm:text-xs font-bold uppercase tracking-[0.15em]">Find your fit</button>
+                class="tab-btn is-active px-3 sm:px-5 py-3 text-[10px] sm:text-xs font-bold uppercase tracking-[0.12em]">Your fit</button>
+        <button role="tab" aria-selected="false" aria-controls="incl" id="btn-incl"
+                class="tab-btn px-3 sm:px-5 py-3 text-[10px] sm:text-xs font-bold uppercase tracking-[0.12em]">Inclusions</button>
         <button role="tab" aria-selected="false" aria-controls="all" id="btn-all"
-                class="tab-btn px-4 sm:px-6 py-3 text-[10px] sm:text-xs font-bold uppercase tracking-[0.15em]">All packages</button>
+                class="tab-btn px-3 sm:px-5 py-3 text-[10px] sm:text-xs font-bold uppercase tracking-[0.12em]">Packages</button>
         <button role="tab" aria-selected="false" aria-controls="timeline" id="btn-timeline"
-                class="tab-btn px-4 sm:px-6 py-3 text-[10px] sm:text-xs font-bold uppercase tracking-[0.15em]">Timeline</button>
+                class="tab-btn px-3 sm:px-5 py-3 text-[10px] sm:text-xs font-bold uppercase tracking-[0.12em]">Process</button>
     </div>
 </header>
 
@@ -253,6 +270,7 @@
 
         <div class="flex flex-wrap justify-center gap-x-6 gap-y-2 text-[10px] font-bold uppercase tracking-[0.2em]">
             <button type="button" id="r-restart" class="text-stone-400 hover:text-sage transition-colors">↺ Start over</button>
+            <button type="button" id="r-incl" class="text-stone-400 hover:text-sage transition-colors">Every deliverable →</button>
             <button type="button" id="r-browse" class="text-stone-400 hover:text-sage transition-colors">Browse every package →</button>
         </div>
     </div>
@@ -292,6 +310,26 @@
             Pre-wedding shoot at $1,020 for two hours at one location, photographed and filmed
         </p>
     </div>
+</section>
+
+<!-- ============ TAB 2: INCLUSIONS AT A GLANCE ============ -->
+<section id="incl" role="tabpanel" aria-labelledby="btn-incl" class="tab-panel max-w-xl mx-auto px-5 pt-8 pb-20">
+
+    <p class="text-xs text-stone-500 italic leading-relaxed mb-6 text-center">
+        Everything a package carries, and everything it doesn't. Pick one to see its list.
+    </p>
+
+    <div class="flex flex-wrap items-center justify-center gap-1 p-1 bg-white border border-stone-200 rounded-full text-[9px] font-bold uppercase tracking-widest w-fit mx-auto mb-4" role="group" aria-label="Choose what to capture">
+        <button type="button" class="seg-btn inc-cat px-4 py-2 rounded-full bg-sage text-cream" data-cat="combo" aria-pressed="true">Photo + Film</button>
+        <button type="button" class="seg-btn inc-cat px-4 py-2 rounded-full text-stone-400" data-cat="photo" aria-pressed="false">Photo</button>
+        <button type="button" class="seg-btn inc-cat px-4 py-2 rounded-full text-stone-400" data-cat="video" aria-pressed="false">Film</button>
+    </div>
+
+    <div id="inc-pills" class="flex flex-wrap justify-center gap-2 mb-7" role="group" aria-label="Choose a package"></div>
+
+    <div id="inc-panel" class="bg-white rounded-[2rem] border border-stone-200 p-7 md:p-9" aria-live="polite"></div>
+
+    <p class="text-[10px] text-stone-400 mt-5 text-center uppercase tracking-widest">A dash means that deliverable isn't in this package</p>
 </section>
 
 <!-- ============ TAB 3: TIMELINE ============ -->
@@ -485,7 +523,9 @@ const crewText = p => {
   if (p.vg) b.push(p.vg + ' videographer' + (p.vg > 1 ? 's' : ''));
   return b.join(' · ');
 };
-const showcasePrice = p => p.d5 ? Math.round(p.price * (1 - SHOWCASE_PCT) * 100) / 100 : p.price;
+const showcaseOffer = p => p.d5 || p.d250;
+const showcasePrice = p => Math.round(
+  (p.price - (p.d5 ? p.price * SHOWCASE_PCT : 0) - (p.d250 ? SHOWCASE_FLAT : 0)) * 100) / 100;
 
 /* is this a two-shooter package for its own discipline(s)? */
 const isDuo = p => p.kind === 'combo' ? (p.pg > 1 && p.vg > 1) : (p.pg + p.vg) > 1;
@@ -737,7 +777,7 @@ function rowHTML(p) {
       </span>
       <span class="text-right shrink-0">
         <span class="block text-lg font-light">${fmt(p.price)}</span>
-        ${p.d5 ? `<span class="block text-[9px] font-bold uppercase tracking-widest text-sage mt-0.5">${fmt(showcasePrice(p))} at showcase</span>` : ''}
+        ${showcaseOffer(p) ? `<span class="block text-[9px] font-bold uppercase tracking-widest text-sage mt-0.5">${fmt(showcasePrice(p))} at showcase</span>` : ''}
       </span>
       <span class="pkg-icon text-lg leading-none text-sage shrink-0" aria-hidden="true">+</span>
     </button>
@@ -761,6 +801,115 @@ $$('.cat-btn').forEach(btn => btn.addEventListener('click', () => {
   });
   $$('.pkg-group').forEach(g => g.classList.toggle('hidden', cat !== 'all' && g.dataset.group !== cat));
 }));
+
+/* ==========================================================================
+   INCLUSIONS AT A GLANCE — every deliverable, ticked or dashed
+   ========================================================================== */
+/* the full universe of deliverables, so a dash is as informative as a tick */
+const PHOTO_ROWS = ['Unlimited edited photographs','Online photo gallery','Itinerary planning',
+  '20 × 4R photo album','2 × magnetic polaroid','20 × Instax album','10 × next-day sneak preview',
+  '2 photographers'];
+const FILM_ROWS  = ['1 min film','1–2 min film','1 min vertical film','3–5 min wedding film',
+  'Thumbdrive + keepsake pouch','2 videographers'];
+
+let incCat = 'combo';
+let incId  = 'narrative';
+
+const mark = on => on
+  ? '<span class="inc-mark inc-on">✓</span>'
+  : '<span class="inc-mark inc-off">—</span>';
+
+function renderIncPills() {
+  const list = PACKAGES.filter(p => p.kind === incCat);
+  if (!list.some(p => p.id === incId)) incId = (list.find(p => p.featured) || list[0]).id;
+
+  $('#inc-pills').innerHTML = list.map(p => `
+    <button type="button" class="inc-pill" data-id="${p.id}" aria-pressed="${String(p.id === incId)}">
+      ${p.name.replace(/ \((Photo|Video) Only\)/, '')}
+    </button>`).join('');
+
+  $$('#inc-pills .inc-pill').forEach(b => b.addEventListener('click', () => {
+    incId = b.dataset.id;
+    renderIncPills();
+    renderIncPanel();
+  }));
+}
+
+function renderIncPanel() {
+  const p = PACKAGES.find(x => x.id === incId);
+
+  const facts = [
+    ['Coverage', `Up to ${p.hours} hours`],
+    ['Crew', crewText(p)],
+    ...(p.extras.includes('1 Location') ? [['Locations', 'One']] : []),
+    ['Investment', fmt(p.price)],
+    ['At the showcase', showcaseOffer(p) ? fmt(showcasePrice(p)) : '—'],
+    ['Additional hour', fmt(p.hr) + '/hr'],
+  ].map(([k, v]) => `
+    <div class="flex items-baseline justify-between gap-4 py-2 border-b border-stone-100 last:border-0">
+      <dt class="text-xs text-stone-500">${k}</dt>
+      <dd class="text-xs font-semibold text-ink text-right">${v}</dd>
+    </div>`).join('');
+
+  const rows = (title, list, owned) => !list.length ? '' : `
+    <p class="text-[9px] font-bold uppercase tracking-widest text-sage mt-7 mb-1">${title}</p>
+    <div>${list.map(x => {
+      const on = owned.includes(x);
+      return `<div class="inc-row">${mark(on)}<span class="text-xs leading-relaxed ${on ? 'text-stone-700' : 'text-stone-400'}">${x}</span></div>`;
+    }).join('')}</div>`;
+
+  const day = [
+    ['Splittable over two days', p.extras.includes('Splittable over 2 days')],
+    ['5% showcase discount', p.d5],
+    ['$250 showcase discount', p.d250],
+  ].map(([label, on]) =>
+    `<div class="inc-row">${mark(on)}<span class="text-xs leading-relaxed ${on ? 'text-stone-700' : 'text-stone-400'}">${label}</span></div>`).join('');
+
+  $('#inc-panel').innerHTML = `
+    <h2 class="font-serif text-2xl leading-tight mb-1">${p.name}</h2>
+    <p class="text-[10px] uppercase tracking-widest text-stone-400 mb-6">${p.tag} · ${KIND_STUDIO[p.kind]}</p>
+    <dl class="mb-2">${facts}</dl>
+    ${p.kind !== 'video' ? rows('Photography', PHOTO_ROWS, p.photo) : ''}
+    ${p.kind !== 'photo' ? rows('Film', FILM_ROWS, p.film) : ''}
+    <p class="text-[9px] font-bold uppercase tracking-widest text-sage mt-7 mb-1">The day</p>
+    <div>${day}</div>`;
+}
+
+$$('.inc-cat').forEach(btn => btn.addEventListener('click', () => {
+  incCat = btn.dataset.cat;
+  $$('.inc-cat').forEach(b => {
+    const on = b === btn;
+    b.setAttribute('aria-pressed', String(on));
+    b.classList.toggle('bg-sage', on);
+    b.classList.toggle('text-cream', on);
+    b.classList.toggle('text-stone-400', !on);
+  });
+  renderIncPills();
+  renderIncPanel();
+}));
+
+/* arrive here from the recommendation with that package already open */
+function openInclusions(id) {
+  const p = PACKAGES.find(x => x.id === id);
+  if (p) {
+    incId  = p.id;
+    incCat = p.kind;
+    $$('.inc-cat').forEach(b => {
+      const on = b.dataset.cat === incCat;
+      b.setAttribute('aria-pressed', String(on));
+      b.classList.toggle('bg-sage', on);
+      b.classList.toggle('text-cream', on);
+      b.classList.toggle('text-stone-400', !on);
+    });
+    renderIncPills();
+    renderIncPanel();
+  }
+  $('#btn-incl').click();
+}
+$('#r-incl').addEventListener('click', () => {
+  /* the button only exists on the result panel, but don't assume a package is picked */
+  openInclusions(ans.kind ? price().p.id : incId);
+});
 
 /* ==========================================================================
    TIMELINE
@@ -797,6 +946,8 @@ function observeReveals() {
    ========================================================================== */
 renderQuestion();
 renderPackages();
+renderIncPills();
+renderIncPanel();
 renderTimeline();
 observeReveals();
 </script>
