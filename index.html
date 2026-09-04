@@ -368,7 +368,7 @@
    ========================================================================== */
 const PWS_FEE      = 1020;   // pre-wedding shoot
 const DEPOSIT_PCT  = 0.30;
-const SHOWCASE_PCT = 0.05;   // Hitcheed discount — photo + film packages only
+const SHOWCASE_PCT = 0.05;   // Hitcheed discount — every package
 const SHOWCASE_FLAT= 250;    // flat showcase discount — longer photo + film packages only
 
 const PHOTO_STD = ['Unlimited edited photographs','Online photo gallery','Itinerary planning','20 × 4R photo album','2 × magnetic polaroid'];
@@ -401,42 +401,42 @@ const PACKAGES = [
   /* ---------- PHOTOGRAPHY ONLY (Natsuku) ---------- */
   { id:'prelude-p', kind:'photo', name:'Prelude (Photo Only)', tag:'The Opening Frame', hours:2, price:500, pg:1, vg:0, hr:250,
     blurb:'Two hours at a single location, photographed.',
-    photo:PHOTO_MIN, film:[], extras:['1 Location'], d5:false, d250:false },
+    photo:PHOTO_MIN, film:[], extras:['1 Location'], d5:true, d250:false },
   { id:'cherish',   kind:'photo', name:'Cherish',      tag:'The Essentials',     hours:3,  price:828,  pg:1, vg:0, hr:250,
     blurb:'Perfect for small, meaningful events like a concise solemnisation.',
-    photo:PHOTO_STD, film:[], extras:[], d5:false, d250:false },
+    photo:PHOTO_STD, film:[], extras:[], d5:true, d250:false },
   { id:'devotion',  kind:'photo', name:'Devotion',     tag:'Focused Coverage',   hours:6,  price:1588, pg:1, vg:0, hr:250,
     blurb:'Ideal for capturing main morning events or lunch receptions.',
-    photo:PHOTO_STD, film:[], extras:[], d5:false, d250:false },
+    photo:PHOTO_STD, film:[], extras:[], d5:true, d250:false },
   { id:'adore',     kind:'photo', name:'Adore',        tag:'Most Requested',     hours:9,  price:1788, pg:1, vg:0, hr:250, featured:true,
     blurb:'Our most requested package for comprehensive day-to-night storytelling.',
-    photo:PHOTO_STD, film:[], extras:[], d5:false, d250:false },
+    photo:PHOTO_STD, film:[], extras:[], d5:true, d250:false },
   { id:'beloved',   kind:'photo', name:'Beloved',      tag:'The Complete Story', hours:12, price:2388, pg:1, vg:0, hr:250,
     blurb:'Capture every single moment from the crack of dawn to the final toast.',
-    photo:PHOTO_STD.concat(BELOVED_X), film:[], extras:['Splittable over 2 days'], d5:false, d250:false },
+    photo:PHOTO_STD.concat(BELOVED_X), film:[], extras:['Splittable over 2 days'], d5:true, d250:false },
   { id:'beloved-duo',kind:'photo',name:'Beloved Duo',  tag:'Two Storytellers',   hours:12, price:3588, pg:2, vg:0, hr:250,
     blurb:'Everything in Beloved, with a second photographer so no glance goes unseen.',
-    photo:['2 photographers'].concat(PHOTO_STD, BELOVED_X), film:[], extras:['2 Photographers','Splittable over 2 days'], d5:false, d250:false },
+    photo:['2 photographers'].concat(PHOTO_STD, BELOVED_X), film:[], extras:['2 Photographers','Splittable over 2 days'], d5:true, d250:false },
 
   /* ---------- FILM ONLY (ThroughWebbedLens) ---------- */
   { id:'prelude-v', kind:'video', name:'Prelude (Video Only)', tag:'The Opening Frame', hours:2, price:520, pg:0, vg:1, hr:250,
     blurb:'Two hours at a single location, filmed.',
-    photo:[], film:['1 min film'], extras:['1 Location'], d5:false, d250:false },
+    photo:[], film:['1 min film'], extras:['1 Location'], d5:true, d250:false },
   { id:'glimpse-v', kind:'video', name:'A Glimpse (Video Only)', tag:'The Essentials', hours:3, price:880, pg:0, vg:1, hr:250,
     blurb:'A concise ceremony or solemnisation, cut into a keepsake short.',
-    photo:[], film:['1–2 min film'], extras:[], d5:false, d250:false },
+    photo:[], film:['1–2 min film'], extras:[], d5:true, d250:false },
   { id:'chapter-v', kind:'video', name:'A Chapter (Video Only)', tag:'Focused Coverage', hours:6, price:1610, pg:0, vg:1, hr:250,
     blurb:'The main events filmed in full, as a vertical cut and a wedding film.',
-    photo:[], film:FILM_STD, extras:[], d5:false, d250:false },
+    photo:[], film:FILM_STD, extras:[], d5:true, d250:false },
   { id:'narrative-v',kind:'video',name:'The Narrative (Video Only)', tag:'Most Requested', hours:9, price:2060, pg:0, vg:1, hr:250, featured:true,
     blurb:'Day-to-night filming, the most requested length for a full wedding film.',
-    photo:[], film:FILM_STD, extras:[], d5:false, d250:false },
+    photo:[], film:FILM_STD, extras:[], d5:true, d250:false },
   { id:'complete-v',kind:'video', name:'The Complete Story (Video Only)', tag:'Dawn to Last Dance', hours:12, price:2510, pg:0, vg:1, hr:250,
     blurb:'Every moment filmed, from the crack of dawn to the final toast.',
-    photo:[], film:FILM_STD, extras:['Splittable over 2 days'], d5:false, d250:false },
+    photo:[], film:FILM_STD, extras:['Splittable over 2 days'], d5:true, d250:false },
   { id:'director-v',kind:'video', name:"Director's Cut (Video Only)", tag:'Two Storytellers', hours:12, price:4370, pg:0, vg:2, hr:250,
     blurb:'A full day filmed by two, so both sides of the morning are covered at once.',
-    photo:[], film:['2 videographers'].concat(FILM_STD), extras:['2 Videographers','Splittable over 2 days'], d5:false, d250:false },
+    photo:[], film:['2 videographers'].concat(FILM_STD), extras:['2 Videographers','Splittable over 2 days'], d5:true, d250:false },
 ];
 
 const KIND_LABEL  = { combo:'Photo + Film', photo:'Photography Only', video:'Film Only' };
@@ -502,8 +502,7 @@ const QUESTIONS = [
   {
     id: 'show',
     title: 'Are you booking with us at the Hitcheed showcase?',
-    sub: 'Showcase couples take 5% off the package, and $250 more off the longer ones.',
-    when: a => a.kind === 'combo',
+    sub: 'Showcase couples take 5% off any package, and $250 more off the longer photo + film ones.',
     options: [
       { v:true,  label:'Yes, at the showcase', note:'Apply showcase pricing' },
       { v:false, label:'Somewhere else',       note:'Standard rates' },
