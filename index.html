@@ -236,10 +236,18 @@
                 <span class="switch" aria-hidden="true"><span></span></span>
             </button>
 
-            <button type="button" id="r-show" class="tog w-full flex items-center justify-between gap-4 py-3 border-t border-b border-stone-100 text-left" aria-pressed="false">
+            <button type="button" id="r-show" class="tog w-full flex items-center justify-between gap-4 py-3 border-t border-stone-100 text-left" aria-pressed="false">
                 <span>
                     <span class="block text-sm">Hitcheed showcase pricing</span>
                     <span id="r-show-note" class="block text-[10px] text-stone-400 uppercase tracking-widest mt-0.5"></span>
+                </span>
+                <span class="switch" aria-hidden="true"><span></span></span>
+            </button>
+
+            <button type="button" id="r-card" class="tog w-full flex items-center justify-between gap-4 py-3 border-t border-b border-stone-100 text-left" aria-pressed="false">
+                <span>
+                    <span class="block text-sm">Paying by credit card</span>
+                    <span class="block text-[10px] text-stone-400 uppercase tracking-widest mt-0.5">+3.4% processing fee · bank transfer has none</span>
                 </span>
                 <span class="switch" aria-hidden="true"><span></span></span>
             </button>
@@ -307,7 +315,8 @@
         <h3 class="text-[10px] font-bold uppercase tracking-[0.25em] text-sage mb-1">Add to any package</h3>
         <p class="text-xs text-stone-600 leading-relaxed">
             Additional hours, should the day run long ·
-            Pre-wedding shoot at $1,020 for two hours at one location, photographed and filmed
+            Pre-wedding shoot at $1,020 for two hours at one location, photographed and filmed ·
+            Credit card payments carry a 3.4% processing fee; bank transfer has none
         </p>
     </div>
 </section>
@@ -356,7 +365,7 @@
         <a href="https://maps.app.goo.gl/2jhCvsvyrYShcupk6?g_st=ac" target="_blank" rel="noopener" class="border-b border-cream/30 hover:border-cream hover:text-cream transition-colors pb-1">Reviews</a>
     </div>
     <p class="text-[10px] leading-relaxed max-w-2xl mx-auto">
-        All rates in SGD. 30% non-refundable deposit to secure date.<br>
+        All rates in SGD. 30% non-refundable deposit to secure date. Credit card payments carry a 3.4% processing fee.<br>
         Postponements allowed indefinitely subject to availability.
     </p>
     <p class="text-[10px] uppercase tracking-[0.25em] mt-8 text-cream/40">Natsuku Photography — Hakim &nbsp;·&nbsp; ThroughWebbedLens — Raudah</p>
@@ -370,6 +379,7 @@ const PWS_FEE      = 1020;   // pre-wedding shoot
 const DEPOSIT_PCT  = 0.30;
 const SHOWCASE_PCT = 0.05;   // Hitcheed discount — every package
 const SHOWCASE_FLAT= 250;    // flat showcase discount — longer photo + film packages only
+const CARD_PCT     = 0.034;  // card processing fee, charged on the discounted total
 
 const PHOTO_STD = ['Unlimited edited photographs','Online photo gallery','Itinerary planning','20 × 4R photo album','2 × magnetic polaroid'];
 const PHOTO_MIN = ['Unlimited edited photographs','Online photo gallery'];
@@ -544,7 +554,7 @@ function tierFor(kind, hours, wantDuo) {
    ========================================================================== */
 const ans  = {};            // what the couple answered
 let   step = 0;             // index into the visible questions
-const fine = { hours: 0, duo: false, pws: false, show: false };  // result-screen tweaks
+const fine = { hours: 0, duo: false, pws: false, show: false, card: false };  // result-screen tweaks
 
 const visible = () => QUESTIONS.filter(q => !q.when || q.when(ans));
 
@@ -555,8 +565,10 @@ function price() {
   const pwsFee   = fine.pws ? PWS_FEE : 0;
   const d5       = (fine.show && p.d5)   ? Math.round(p.price * SHOWCASE_PCT * 100) / 100 : 0;
   const d250     = (fine.show && p.d250) ? SHOWCASE_FLAT : 0;
-  const total    = p.price + extraFee + pwsFee - d5 - d250;
-  return { p, extra, extraFee, pwsFee, d5, d250, total,
+  const sub      = p.price + extraFee + pwsFee - d5 - d250;
+  const card     = fine.card ? Math.round(sub * CARD_PCT * 100) / 100 : 0;
+  const total    = sub + card;
+  return { p, extra, extraFee, pwsFee, d5, d250, sub, card, total,
            deposit: Math.round(total * DEPOSIT_PCT * 100) / 100 };
 }
 
@@ -611,6 +623,7 @@ function showResult() {
   fine.duo   = !!ans.duo;
   fine.pws   = !!ans.pws;
   fine.show  = !!ans.show;
+  fine.card  = false;
   $('#quiz-stage').classList.add('hidden');
   $('#quiz-progress').classList.add('hidden');
   $('#result').classList.remove('hidden');
@@ -638,7 +651,7 @@ $$('.step-btn').forEach(b => b.addEventListener('click', () => {
   if (fine.hours < DUO_FROM) fine.duo = false;
   renderResult();
 }));
-[['#r-duo', 'duo'], ['#r-pws', 'pws'], ['#r-show', 'show']].forEach(([sel, key]) => {
+[['#r-duo', 'duo'], ['#r-pws', 'pws'], ['#r-show', 'show'], ['#r-card', 'card']].forEach(([sel, key]) => {
   $(sel).addEventListener('click', () => {
     if ($(sel).disabled) return;
     fine[key] = !fine[key];
@@ -669,7 +682,7 @@ function renderResult() {
     ? [p.d5 ? '5% off' : null, p.d250 ? '$250 off' : null].filter(Boolean).join(' · ')
     : 'Not offered on this package';
 
-  [['#r-duo', fine.duo && duoOK], ['#r-pws', fine.pws], ['#r-show', fine.show && showOK]]
+  [['#r-duo', fine.duo && duoOK], ['#r-pws', fine.pws], ['#r-show', fine.show && showOK], ['#r-card', fine.card]]
     .forEach(([sel, on]) => $(sel).setAttribute('aria-pressed', String(on)));
 
   const lines = [[`${p.name} · up to ${p.hours} hrs`, fmt(p.price)]];
@@ -677,6 +690,7 @@ function renderResult() {
   if (r.pwsFee)   lines.push(['Pre-wedding shoot', fmt(r.pwsFee)]);
   if (r.d5)       lines.push(['Showcase 5% off', '−' + fmt(r.d5)]);
   if (r.d250)     lines.push(['$250 showcase discount', '−' + fmt(r.d250)]);
+  if (r.card)     lines.push(['Credit card fee · 3.4%', '+' + fmt(r.card)]);
 
   $('#r-lines').innerHTML = lines.map(([k, v]) => {
     const cut = v.startsWith('−');
