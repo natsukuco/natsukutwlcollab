@@ -119,14 +119,14 @@
     .seg-btn { transition: color .3s ease, background-color .3s ease; }
 
     /* Inclusions — package pills and tick rows */
-    .inc-pill {
+    .inc-pill, .pws-pill {
         font-size: .625rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
         padding: .55rem 1rem; border-radius: 999px; border: 1px solid #e2e0d8; background: #fff;
         color: #8b8f89; cursor: pointer;
         transition: color .25s ease, border-color .25s ease, background-color .25s ease;
     }
-    .inc-pill:hover { border-color: var(--sage); color: var(--sage); }
-    .inc-pill[aria-pressed="true"] { background: var(--sage); border-color: var(--sage); color: #f1e8d7; }
+    .inc-pill:hover, .pws-pill:hover { border-color: var(--sage); color: var(--sage); }
+    .inc-pill[aria-pressed="true"], .pws-pill[aria-pressed="true"] { background: var(--sage); border-color: var(--sage); color: #f1e8d7; }
     .inc-row { display: flex; align-items: flex-start; gap: .75rem; padding: .6rem 0; border-bottom: 1px solid #f2f0ea; }
     .inc-row:last-child { border-bottom: 0; }
     .inc-mark { width: 1rem; flex: none; text-align: center; line-height: 1.35; }
@@ -228,13 +228,15 @@
                 <span class="switch" aria-hidden="true"><span></span></span>
             </button>
 
-            <button type="button" id="r-pws" class="tog w-full flex items-center justify-between gap-4 py-3 border-t border-stone-100 text-left" aria-pressed="false">
-                <span>
-                    <span class="block text-sm">Pre-wedding shoot</span>
-                    <span class="block text-[10px] text-stone-400 uppercase tracking-widest mt-0.5">+$1,020 · 2 hrs, one location, photo + film</span>
-                </span>
-                <span class="switch" aria-hidden="true"><span></span></span>
-            </button>
+            <div class="py-3 border-t border-stone-100">
+                <span class="block text-sm">Pre-wedding shoot</span>
+                <span class="block text-[10px] text-stone-400 uppercase tracking-widest mt-0.5 mb-3">2 hrs, one location · tap again to remove</span>
+                <div id="r-pws" class="flex flex-wrap gap-2" role="group" aria-label="Pre-wedding shoot">
+                    <button type="button" class="pws-pill" data-pws="photo" aria-pressed="false">Photo · $500</button>
+                    <button type="button" class="pws-pill" data-pws="film"  aria-pressed="false">Film · $520</button>
+                    <button type="button" class="pws-pill" data-pws="both"  aria-pressed="false">Both · $1,020</button>
+                </div>
+            </div>
 
             <button type="button" id="r-show" class="tog w-full flex items-center justify-between gap-4 py-3 border-t border-stone-100 text-left" aria-pressed="false">
                 <span>
@@ -315,7 +317,7 @@
         <h3 class="text-[10px] font-bold uppercase tracking-[0.25em] text-sage mb-1">Add to any package</h3>
         <p class="text-xs text-stone-600 leading-relaxed">
             Additional hours, should the day run long ·
-            Pre-wedding shoot at $1,020 for two hours at one location, photographed and filmed ·
+            Pre-wedding shoot for two hours at one location — $500 photographed, $520 filmed, $1,020 for both ·
             Credit card payments carry a 3.4% processing fee; bank transfer has none
         </p>
     </div>
@@ -375,7 +377,11 @@
 /* ==========================================================================
    RATE CARD DATA — edit here, the whole page follows
    ========================================================================== */
-const PWS_FEE      = 1020;   // pre-wedding shoot
+/* pre-wedding shoot — 2 hours, one location. The combined fee has always been
+   $1,020, which is exactly the two Prelude tiers ($500 photo + $520 film), so
+   the standalone fees follow that same split. */
+const PWS_FEE = { photo: 500, film: 520, both: 1020 };
+const PWS_LABEL = { photo: 'photography', film: 'film', both: 'photo + film' };
 const DEPOSIT_PCT  = 0.30;
 const SHOWCASE_PCT = 0.05;   // Hitcheed discount — every package
 const SHOWCASE_FLAT= 250;    // flat showcase discount — longer photo + film packages only
@@ -505,7 +511,7 @@ const QUESTIONS = [
     title: 'A pre-wedding shoot as well?',
     sub: 'A relaxed session before the day itself — a rehearsal for being photographed together.',
     options: [
-      { v:true,  label:'Yes, let’s do one', note:'+$1,020 · 2 hours, one location, photographed and filmed' },
+      { v:true,  label:'Yes, let’s do one', note:'From $500 · 2 hours at one location — pick photo, film or both next' },
       { v:false, label:'Not this time',          note:'Just the wedding day' },
     ]
   },
@@ -554,7 +560,7 @@ function tierFor(kind, hours, wantDuo) {
    ========================================================================== */
 const ans  = {};            // what the couple answered
 let   step = 0;             // index into the visible questions
-const fine = { hours: 0, duo: false, pws: false, show: false, card: false };  // result-screen tweaks
+const fine = { hours: 0, duo: false, pws: '', show: false, card: false };  // result-screen tweaks
 
 const visible = () => QUESTIONS.filter(q => !q.when || q.when(ans));
 
@@ -562,7 +568,7 @@ function price() {
   const p = tierFor(ans.kind, fine.hours, fine.duo);
   const extra    = Math.max(0, fine.hours - p.hours);
   const extraFee = extra * p.hr;
-  const pwsFee   = fine.pws ? PWS_FEE : 0;
+  const pwsFee   = fine.pws ? PWS_FEE[fine.pws] : 0;
   const d5       = (fine.show && p.d5)   ? Math.round(p.price * SHOWCASE_PCT * 100) / 100 : 0;
   const d250     = (fine.show && p.d250) ? SHOWCASE_FLAT : 0;
   const sub      = p.price + extraFee + pwsFee - d5 - d250;
@@ -621,7 +627,7 @@ $('#q-back').addEventListener('click', () => {
 function showResult() {
   fine.hours = ans.hours;
   fine.duo   = !!ans.duo;
-  fine.pws   = !!ans.pws;
+  fine.pws   = ans.pws ? (ans.kind === 'photo' ? 'photo' : ans.kind === 'video' ? 'film' : 'both') : '';
   fine.show  = !!ans.show;
   fine.card  = false;
   $('#quiz-stage').classList.add('hidden');
@@ -651,7 +657,11 @@ $$('.step-btn').forEach(b => b.addEventListener('click', () => {
   if (fine.hours < DUO_FROM) fine.duo = false;
   renderResult();
 }));
-[['#r-duo', 'duo'], ['#r-pws', 'pws'], ['#r-show', 'show'], ['#r-card', 'card']].forEach(([sel, key]) => {
+$$('.pws-pill').forEach(b => b.addEventListener('click', () => {
+  fine.pws = fine.pws === b.dataset.pws ? '' : b.dataset.pws;   /* tap the chosen one to clear it */
+  renderResult();
+}));
+[['#r-duo', 'duo'], ['#r-show', 'show'], ['#r-card', 'card']].forEach(([sel, key]) => {
   $(sel).addEventListener('click', () => {
     if ($(sel).disabled) return;
     fine[key] = !fine[key];
@@ -682,12 +692,13 @@ function renderResult() {
     ? [p.d5 ? '5% off' : null, p.d250 ? '$250 off' : null].filter(Boolean).join(' · ')
     : 'Not offered on this package';
 
-  [['#r-duo', fine.duo && duoOK], ['#r-pws', fine.pws], ['#r-show', fine.show && showOK], ['#r-card', fine.card]]
+  [['#r-duo', fine.duo && duoOK], ['#r-show', fine.show && showOK], ['#r-card', fine.card]]
     .forEach(([sel, on]) => $(sel).setAttribute('aria-pressed', String(on)));
+  $$('.pws-pill').forEach(b => b.setAttribute('aria-pressed', String(fine.pws === b.dataset.pws)));
 
   const lines = [[`${p.name} · up to ${p.hours} hrs`, fmt(p.price)]];
   if (r.extraFee) lines.push([`${r.extra} additional hour${r.extra > 1 ? 's' : ''}`, fmt(r.extraFee)]);
-  if (r.pwsFee)   lines.push(['Pre-wedding shoot', fmt(r.pwsFee)]);
+  if (r.pwsFee)   lines.push([`Pre-wedding shoot · ${PWS_LABEL[fine.pws]}`, fmt(r.pwsFee)]);
   if (r.d5)       lines.push(['Showcase 5% off', '−' + fmt(r.d5)]);
   if (r.d250)     lines.push(['$250 showcase discount', '−' + fmt(r.d250)]);
   if (r.card)     lines.push(['Credit card fee · 3.4%', '+' + fmt(r.card)]);
@@ -705,7 +716,12 @@ function renderResult() {
   const groups = [];
   if (p.photo.length) groups.push(['Photography', p.photo]);
   if (p.film.length)  groups.push(['Film', p.film]);
-  if (fine.pws)       groups.push(['Before the day', ['Pre-wedding shoot · 2 hours, one location', 'Unlimited edited photographs', 'Online photo gallery']]);
+  if (fine.pws) {
+    const pwsItems = ['2 hours at one location'];
+    if (fine.pws !== 'film')  pwsItems.push('Unlimited edited photographs', 'Online photo gallery');
+    if (fine.pws !== 'photo') pwsItems.push('Filmed coverage');
+    groups.push([`Pre-wedding shoot · ${PWS_LABEL[fine.pws]}`, pwsItems]);
+  }
   $('#r-includes').innerHTML = groups.map(([h, list]) => `
     <div>
       <p class="text-[9px] font-bold uppercase tracking-widest text-sage mb-2">${h}</p>
