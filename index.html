@@ -145,6 +145,8 @@
     .qr-one svg { width: 100%; height: auto; max-width: 9.5rem; }
     .qr-cap { font-size: .5625rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--sage); margin-bottom: .6rem; }
     #qr-note { word-break: break-all; overflow-wrap: anywhere; }
+    /* the take-home code stands alone, so it can be larger */
+    #qr-takeaway svg { width: 13.5rem; max-width: 100%; height: auto; }
 
     @media (prefers-reduced-motion: reduce) {
         html { scroll-behavior: auto; }
@@ -175,15 +177,17 @@
     <p class="italic text-sage-soft font-serif tracking-wide mb-2 text-sm">懐く — to be fondly remembered</p>
     <p class="text-[10px] font-bold uppercase tracking-[0.35em] text-stone-400 mb-7">Photo &amp; Film · 2026 / 2027</p>
 
-    <div class="flex justify-center border-b border-stone-200 max-w-md mx-auto" role="tablist" aria-label="Rate card sections">
+    <div class="flex flex-wrap justify-center border-b border-stone-200 max-w-md mx-auto" role="tablist" aria-label="Rate card sections">
         <button role="tab" aria-selected="true" aria-controls="fit" id="btn-fit"
-                class="tab-btn is-active px-3 sm:px-5 py-3 text-[10px] sm:text-xs font-bold uppercase tracking-[0.12em]">Your fit</button>
+                class="tab-btn is-active px-2 sm:px-5 py-3 text-[10px] sm:text-xs font-bold uppercase tracking-[0.12em]">Your fit</button>
         <button role="tab" aria-selected="false" aria-controls="incl" id="btn-incl"
-                class="tab-btn px-3 sm:px-5 py-3 text-[10px] sm:text-xs font-bold uppercase tracking-[0.12em]">Inclusions</button>
+                class="tab-btn px-2 sm:px-5 py-3 text-[10px] sm:text-xs font-bold uppercase tracking-[0.12em]">Inclusions</button>
         <button role="tab" aria-selected="false" aria-controls="all" id="btn-all"
-                class="tab-btn px-3 sm:px-5 py-3 text-[10px] sm:text-xs font-bold uppercase tracking-[0.12em]">Packages</button>
+                class="tab-btn px-2 sm:px-5 py-3 text-[10px] sm:text-xs font-bold uppercase tracking-[0.12em]">Packages</button>
         <button role="tab" aria-selected="false" aria-controls="timeline" id="btn-timeline"
-                class="tab-btn px-3 sm:px-5 py-3 text-[10px] sm:text-xs font-bold uppercase tracking-[0.12em]">Process</button>
+                class="tab-btn px-2 sm:px-5 py-3 text-[10px] sm:text-xs font-bold uppercase tracking-[0.12em]">Process</button>
+        <button role="tab" aria-selected="false" aria-controls="takeaway" id="btn-takeaway"
+                class="tab-btn px-2 sm:px-5 py-3 text-[10px] sm:text-xs font-bold uppercase tracking-[0.12em]">Take home</button>
     </div>
 </header>
 
@@ -380,6 +384,26 @@
     <div class="relative">
         <div class="timeline-line absolute left-1/2 -translate-x-1/2 top-0 bottom-0 w-px hidden md:block" aria-hidden="true"></div>
         <ol id="tl-list" class="space-y-8 md:space-y-0"></ol>
+    </div>
+</section>
+
+<!-- ============ TAB 5: TAKE THE RATE CARD HOME ============ -->
+<section id="takeaway" role="tabpanel" aria-labelledby="btn-takeaway" class="tab-panel max-w-xl mx-auto px-5 pt-8 pb-20">
+    <div class="bg-white rounded-[2rem] border border-stone-200 p-8 md:p-10 text-center">
+        <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-sage mb-2">Take it with you</p>
+        <h2 class="font-serif text-2xl md:text-3xl leading-snug mb-3">The rate card, to keep</h2>
+        <p class="text-xs text-stone-500 italic leading-relaxed mb-8 max-w-sm mx-auto">
+            Every package and price in one document. Point a phone camera at the code, or tap below
+            if you are already reading this on your phone.
+        </p>
+
+        <div id="qr-takeaway" class="inline-block mb-7"></div>
+
+        <a id="takeaway-link" href="#" target="_blank" rel="noopener"
+           class="block text-center w-full text-[10px] font-bold uppercase tracking-[0.2em] bg-sage text-cream px-5 py-4 rounded-full hover:bg-sage-deep transition-colors">Open the rate card</a>
+        <p class="text-[10px] text-stone-400 mt-5 leading-relaxed">
+            Prefer a figure for your own day? <button type="button" id="takeaway-quiz" class="underline hover:text-sage transition-colors">Answer a few questions</button> and we'll work one out.
+        </p>
     </div>
 </section>
 
@@ -1280,6 +1304,10 @@ function observeReveals() {
 /* ==========================================================================
    INIT
    ========================================================================== */
+$('#qr-takeaway').innerHTML = qrSVG(RATE_CARD_URL, 'QR code that opens the full rate card to download');
+$('#takeaway-link').href = RATE_CARD_URL;
+$('#takeaway-quiz').addEventListener('click', () => $('#btn-fit').click());
+
 if (readShared()) revealResult(); else renderQuestion();
 renderPackages();
 renderIncPills();
