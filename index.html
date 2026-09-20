@@ -289,7 +289,7 @@
             <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-sage mb-2">Take it with you</p>
             <p class="text-xs text-stone-500 italic leading-relaxed mb-7 max-w-sm mx-auto">
                 Point your phone camera at either code. The first opens this estimate on your own screen;
-                the second opens the rate card itself, to browse again at home.
+                the second downloads the full rate card, to take away and think over.
             </p>
             <div class="qr-pair">
                 <div class="qr-one">
@@ -297,7 +297,7 @@
                     <div id="qr"></div>
                 </div>
                 <div class="qr-one">
-                    <p class="qr-cap">The full rate card</p>
+                    <p class="qr-cap">The rate card</p>
                     <div id="qr-generic"></div>
                 </div>
             </div>
@@ -415,6 +415,8 @@ const CARD_PCT     = 0.034;  // card processing fee, charged on the discounted t
 /* Only used when the page is opened from a file:// path; when it is served the
    QR points at wherever it is actually hosted. */
 const SITE_URL     = 'https://natsukuco.github.io/natsukutwlcollab/';
+/* the rate card PDF, for couples who want to take it away and decide later */
+const RATE_CARD_URL = 'https://drive.google.com/file/d/1UhCoGxU0655ehuMnZWkghj4TpQ01RkX1/view?usp=sharing';
 
 const PHOTO_STD = ['Unlimited edited photographs','Online photo gallery','Itinerary planning','20 × 4R photo album','2 × magnetic polaroid'];
 const PHOTO_MIN = ['Unlimited edited photographs','Online photo gallery'];
@@ -1024,7 +1026,7 @@ function renderQR() {
   if (!svg) { $('#qr-card').classList.add('hidden'); return; }   /* only if it ever got too long */
   $('#qr-card').classList.remove('hidden');
   $('#qr').innerHTML = svg;
-  $('#qr-generic').innerHTML = qrSVG(siteURL(), 'QR code that opens the full rate card on a phone');
+  $('#qr-generic').innerHTML = qrSVG(RATE_CARD_URL, 'QR code that opens the full rate card to download');
   $('#qr-note').textContent = url.replace(/^https?:\/\//, '');
 }
 
