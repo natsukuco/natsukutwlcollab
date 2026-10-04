@@ -6,7 +6,7 @@
 
 <title>Natsuku × ThroughWebbedLens | Photo &amp; Film Rate Card 2026–2027</title>
 <meta name="description" content="Answer a few questions and we'll recommend the wedding photography and film package that fits your day. Combo packages from $1,020, photography from $828, film from $880.">
-<meta name="keywords" content="Wedding Photography Singapore, Wedding Videography, Natsuku, ThroughWebbedLens, Combo Wedding Package, Hitcheed Showcase">
+<meta name="keywords" content="Wedding Photography Singapore, Wedding Videography, Natsuku, ThroughWebbedLens, Combo Wedding Package">
 <meta name="author" content="Natsuku Photography">
 <meta name="theme-color" content="#4a544c">
 <link rel="icon" href="https://natsukuco.github.io/interactiveratecard/Natsuku%20Logo-09.png">
@@ -250,14 +250,6 @@
                 </div>
             </div>
 
-            <button type="button" id="r-show" class="tog w-full flex items-center justify-between gap-4 py-3 border-t border-stone-100 text-left" aria-pressed="false">
-                <span>
-                    <span class="block text-sm">Hitcheed showcase pricing</span>
-                    <span id="r-show-note" class="block text-[10px] text-stone-400 uppercase tracking-widest mt-0.5"></span>
-                </span>
-                <span class="switch" aria-hidden="true"><span></span></span>
-            </button>
-
             <button type="button" id="r-card" class="tog w-full flex items-center justify-between gap-4 py-3 border-t border-b border-stone-100 text-left" aria-pressed="false">
                 <span>
                     <span class="block text-sm">Paying by credit card</span>
@@ -435,8 +427,6 @@
 const PWS_FEE = { photo: 500, film: 520, both: 1020 };
 const PWS_LABEL = { photo: 'photography', film: 'film', both: 'photo + film' };
 const DEPOSIT_PCT  = 0.30;
-const SHOWCASE_PCT = 0.05;   // Hitcheed discount — every package
-const SHOWCASE_FLAT= 250;    // flat showcase discount — longer photo + film packages only
 const CARD_PCT     = 0.034;  // card processing fee, charged on the discounted total
 /* Only used when the page is opened from a file:// path; when it is served the
    QR points at wherever it is actually hosted. */
@@ -453,63 +443,63 @@ const PACKAGES = [
   /* ---------- PHOTO + FILM (Natsuku × ThroughWebbedLens) ---------- */
   { id:'prelude',   kind:'combo', name:'Prelude',            tag:'The Opening Frame',  hours:2,  price:1020, pg:1, vg:1, hr:500,
     blurb:'A short, single-location gathering caught by both a camera and a lens.',
-    photo:PHOTO_MIN, film:['1 min film'], extras:['1 Location'], d5:true, d250:false },
+    photo:PHOTO_MIN, film:['1 min film'], extras:['1 Location'] },
   { id:'glimpse',   kind:'combo', name:'A Glimpse',          tag:'The Essentials',     hours:3,  price:1708, pg:1, vg:1, hr:500,
     blurb:'Perfect for a concise solemnisation, with a short film to match.',
-    photo:PHOTO_STD, film:['1–2 min film'], extras:[], d5:true, d250:false },
+    photo:PHOTO_STD, film:['1–2 min film'], extras:[] },
   { id:'chapter',   kind:'combo', name:'A Chapter',          tag:'Focused Coverage',   hours:6,  price:3198, pg:1, vg:1, hr:500,
     blurb:'Ideal for the main morning events or a lunch reception, told in full.',
-    photo:PHOTO_STD, film:FILM_STD, extras:[], d5:true, d250:false },
+    photo:PHOTO_STD, film:FILM_STD, extras:[] },
   { id:'narrative', kind:'combo', name:'The Narrative',      tag:'Most Requested',     hours:9,  price:3848, pg:1, vg:1, hr:500, featured:true,
     blurb:'Our most requested pairing for comprehensive day-to-night storytelling.',
-    photo:PHOTO_STD, film:FILM_STD, extras:[], d5:true, d250:true },
+    photo:PHOTO_STD, film:FILM_STD, extras:[] },
   { id:'complete',  kind:'combo', name:'The Complete Story', tag:'Dawn to Last Dance', hours:12, price:4898, pg:1, vg:1, hr:500,
     blurb:'Every single moment from the crack of dawn to the final toast.',
-    photo:PHOTO_STD.concat(BELOVED_X), film:FILM_STD, extras:['Splittable over 2 days'], d5:true, d250:true },
+    photo:PHOTO_STD.concat(BELOVED_X), film:FILM_STD, extras:['Splittable over 2 days'] },
   { id:'director',  kind:'combo', name:"Director's Cut",     tag:'Four Storytellers',  hours:12, price:7958, pg:2, vg:2, hr:1000,
     blurb:'Everything in The Complete Story, doubled — so no glance goes unseen.',
     photo:['2 photographers'].concat(PHOTO_STD, BELOVED_X), film:['2 videographers'].concat(FILM_STD),
-    extras:['2 Photographers','2 Videographers','Splittable over 2 days'], d5:true, d250:true },
+    extras:['2 Photographers','2 Videographers','Splittable over 2 days'] },
 
   /* ---------- PHOTOGRAPHY ONLY (Natsuku) ---------- */
   { id:'prelude-p', kind:'photo', name:'Prelude (Photo Only)', tag:'The Opening Frame', hours:2, price:500, pg:1, vg:0, hr:250,
     blurb:'Two hours at a single location, photographed.',
-    photo:PHOTO_MIN, film:[], extras:['1 Location'], d5:true, d250:false },
+    photo:PHOTO_MIN, film:[], extras:['1 Location'] },
   { id:'cherish',   kind:'photo', name:'Cherish',      tag:'The Essentials',     hours:3,  price:828,  pg:1, vg:0, hr:250,
     blurb:'Perfect for small, meaningful events like a concise solemnisation.',
-    photo:PHOTO_STD, film:[], extras:[], d5:true, d250:false },
+    photo:PHOTO_STD, film:[], extras:[] },
   { id:'devotion',  kind:'photo', name:'Devotion',     tag:'Focused Coverage',   hours:6,  price:1588, pg:1, vg:0, hr:250,
     blurb:'Ideal for capturing main morning events or lunch receptions.',
-    photo:PHOTO_STD, film:[], extras:[], d5:true, d250:false },
+    photo:PHOTO_STD, film:[], extras:[] },
   { id:'adore',     kind:'photo', name:'Adore',        tag:'Most Requested',     hours:9,  price:1788, pg:1, vg:0, hr:250, featured:true,
     blurb:'Our most requested package for comprehensive day-to-night storytelling.',
-    photo:PHOTO_STD, film:[], extras:[], d5:true, d250:false },
+    photo:PHOTO_STD, film:[], extras:[] },
   { id:'beloved',   kind:'photo', name:'Beloved',      tag:'The Complete Story', hours:12, price:2388, pg:1, vg:0, hr:250,
     blurb:'Capture every single moment from the crack of dawn to the final toast.',
-    photo:PHOTO_STD.concat(BELOVED_X), film:[], extras:['Splittable over 2 days'], d5:true, d250:false },
+    photo:PHOTO_STD.concat(BELOVED_X), film:[], extras:['Splittable over 2 days'] },
   { id:'beloved-duo',kind:'photo',name:'Beloved Duo',  tag:'Two Storytellers',   hours:12, price:3588, pg:2, vg:0, hr:250,
     blurb:'Everything in Beloved, with a second photographer so no glance goes unseen.',
-    photo:['2 photographers'].concat(PHOTO_STD, BELOVED_X), film:[], extras:['2 Photographers','Splittable over 2 days'], d5:true, d250:false },
+    photo:['2 photographers'].concat(PHOTO_STD, BELOVED_X), film:[], extras:['2 Photographers','Splittable over 2 days'] },
 
   /* ---------- FILM ONLY (ThroughWebbedLens) ---------- */
   { id:'prelude-v', kind:'video', name:'Prelude (Video Only)', tag:'The Opening Frame', hours:2, price:520, pg:0, vg:1, hr:250,
     blurb:'Two hours at a single location, filmed.',
-    photo:[], film:['1 min film'], extras:['1 Location'], d5:true, d250:false },
+    photo:[], film:['1 min film'], extras:['1 Location'] },
   { id:'glimpse-v', kind:'video', name:'A Glimpse (Video Only)', tag:'The Essentials', hours:3, price:880, pg:0, vg:1, hr:250,
     blurb:'A concise ceremony or solemnisation, cut into a keepsake short.',
-    photo:[], film:['1–2 min film'], extras:[], d5:true, d250:false },
+    photo:[], film:['1–2 min film'], extras:[] },
   { id:'chapter-v', kind:'video', name:'A Chapter (Video Only)', tag:'Focused Coverage', hours:6, price:1610, pg:0, vg:1, hr:250,
     blurb:'The main events filmed in full, as a vertical cut and a wedding film.',
-    photo:[], film:FILM_STD, extras:[], d5:true, d250:false },
+    photo:[], film:FILM_STD, extras:[] },
   { id:'narrative-v',kind:'video',name:'The Narrative (Video Only)', tag:'Most Requested', hours:9, price:2060, pg:0, vg:1, hr:250, featured:true,
     blurb:'Day-to-night filming, the most requested length for a full wedding film.',
-    photo:[], film:FILM_STD, extras:[], d5:true, d250:false },
+    photo:[], film:FILM_STD, extras:[] },
   { id:'complete-v',kind:'video', name:'The Complete Story (Video Only)', tag:'Dawn to Last Dance', hours:12, price:2510, pg:0, vg:1, hr:250,
     blurb:'Every moment filmed, from the crack of dawn to the final toast.',
-    photo:[], film:FILM_STD, extras:['Splittable over 2 days'], d5:true, d250:false },
+    photo:[], film:FILM_STD, extras:['Splittable over 2 days'] },
   { id:'director-v',kind:'video', name:"Director's Cut (Video Only)", tag:'Two Storytellers', hours:12, price:4370, pg:0, vg:2, hr:250,
     blurb:'A full day filmed by two, so both sides of the morning are covered at once.',
-    photo:[], film:['2 videographers'].concat(FILM_STD), extras:['2 Videographers','Splittable over 2 days'], d5:true, d250:false },
+    photo:[], film:['2 videographers'].concat(FILM_STD), extras:['2 Videographers','Splittable over 2 days'] },
 ];
 
 const KIND_LABEL  = { combo:'Photo + Film', photo:'Photography Only', video:'Film Only' };
@@ -570,15 +560,6 @@ const QUESTIONS = [
     options: [
       { v:true,  label:'Yes, let’s do one', note:'From $500 · 2 hours at one location — pick photo, film or both next' },
       { v:false, label:'Not this time',          note:'Just the wedding day' },
-    ]
-  },
-  {
-    id: 'show',
-    title: 'Are you booking with us at the Hitcheed showcase?',
-    sub: 'Showcase couples take 5% off any package, and $250 more off the longer photo + film ones.',
-    options: [
-      { v:true,  label:'Yes, at the showcase', note:'Apply showcase pricing' },
-      { v:false, label:'Somewhere else',       note:'Standard rates' },
     ]
   },
 ];
@@ -803,9 +784,6 @@ const crewText = p => {
   if (p.vg) b.push(p.vg + ' videographer' + (p.vg > 1 ? 's' : ''));
   return b.join(' · ');
 };
-const showcaseOffer = p => p.d5 || p.d250;
-const showcasePrice = p => Math.round(
-  (p.price - (p.d5 ? p.price * SHOWCASE_PCT : 0) - (p.d250 ? SHOWCASE_FLAT : 0)) * 100) / 100;
 
 /* is this a two-shooter package for its own discipline(s)? */
 const isDuo = p => p.kind === 'combo' ? (p.pg > 1 && p.vg > 1) : (p.pg + p.vg) > 1;
@@ -824,7 +802,7 @@ function tierFor(kind, hours, wantDuo) {
    ========================================================================== */
 const ans  = {};            // what the couple answered
 let   step = 0;             // index into the visible questions
-const fine = { hours: 0, duo: false, pws: '', show: false, card: false };  // result-screen tweaks
+const fine = { hours: 0, duo: false, pws: '', card: false };  // result-screen tweaks
 
 const visible = () => QUESTIONS.filter(q => !q.when || q.when(ans));
 
@@ -841,7 +819,7 @@ function siteURL() {
 function shareURL() {
   const base = siteURL();
   return base + `#e=${KIND_CODE[ans.kind]}.${fine.hours}.${fine.duo ? 1 : 0}.` +
-                `${PWS_CODE[fine.pws]}.${fine.show ? 1 : 0}.${fine.card ? 1 : 0}`;
+                `${PWS_CODE[fine.pws]}.0.${fine.card ? 1 : 0}`;   /* slot 5 is retired, kept so older codes still parse */
 }
 
 /* returns true when the address carried a complete estimate */
@@ -850,11 +828,10 @@ function readShared() {
   if (!m) return false;
   const hours = Math.max(1, Math.min(16, Number(m[2])));
   ans.kind = CODE_KIND[m[1]]; ans.hours = hours;
-  ans.duo = m[3] === '1'; ans.pws = m[4] !== '-'; ans.show = m[5] === '1';
+  ans.duo = m[3] === '1'; ans.pws = m[4] !== '-';
   fine.hours = hours;
   fine.duo = m[3] === '1' && hours >= DUO_FROM;
   fine.pws = CODE_PWS[m[4]];
-  fine.show = m[5] === '1';
   fine.card = m[6] === '1';
   return true;
 }
@@ -864,12 +841,10 @@ function price() {
   const extra    = Math.max(0, fine.hours - p.hours);
   const extraFee = extra * p.hr;
   const pwsFee   = fine.pws ? PWS_FEE[fine.pws] : 0;
-  const d5       = (fine.show && p.d5)   ? Math.round(p.price * SHOWCASE_PCT * 100) / 100 : 0;
-  const d250     = (fine.show && p.d250) ? SHOWCASE_FLAT : 0;
-  const sub      = p.price + extraFee + pwsFee - d5 - d250;
+  const sub      = p.price + extraFee + pwsFee;
   const card     = fine.card ? Math.round(sub * CARD_PCT * 100) / 100 : 0;
   const total    = sub + card;
-  return { p, extra, extraFee, pwsFee, d5, d250, sub, card, total,
+  return { p, extra, extraFee, pwsFee, sub, card, total,
            deposit: Math.round(total * DEPOSIT_PCT * 100) / 100 };
 }
 
@@ -930,7 +905,6 @@ function showResult() {
   fine.hours = ans.hours;
   fine.duo   = !!ans.duo;
   fine.pws   = ans.pws ? (ans.kind === 'photo' ? 'photo' : ans.kind === 'video' ? 'film' : 'both') : '';
-  fine.show  = !!ans.show;
   fine.card  = false;
   revealResult();
   window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -961,7 +935,7 @@ $$('.pws-pill').forEach(b => b.addEventListener('click', () => {
   fine.pws = fine.pws === b.dataset.pws ? '' : b.dataset.pws;   /* tap the chosen one to clear it */
   renderResult();
 }));
-[['#r-duo', 'duo'], ['#r-show', 'show'], ['#r-card', 'card']].forEach(([sel, key]) => {
+[['#r-duo', 'duo'], ['#r-card', 'card']].forEach(([sel, key]) => {
   $(sel).addEventListener('click', () => {
     if ($(sel).disabled) return;
     fine[key] = !fine[key];
@@ -972,7 +946,6 @@ $$('.pws-pill').forEach(b => b.addEventListener('click', () => {
 function renderResult() {
   const r = price(), p = r.p;
   const duoOK  = fine.hours >= DUO_FROM;
-  const showOK = p.d5 || p.d250;
 
   $('#r-name').textContent  = p.name;
   $('#r-tag').textContent   = `${p.tag} · ${KIND_STUDIO[p.kind]}`;
@@ -983,24 +956,18 @@ function renderResult() {
   $('#r-blurb').textContent = p.blurb;
   $('#r-hours').textContent = fine.hours;
 
-  $('#r-duo').disabled  = !duoOK;
-  $('#r-show').disabled = !showOK;
+  $('#r-duo').disabled = !duoOK;
   $('#r-duo-note').textContent  = duoOK
     ? 'A second shooter on each craft you book'
     : `Offered from ${DUO_FROM} hours of coverage`;
-  $('#r-show-note').textContent = showOK
-    ? [p.d5 ? '5% off' : null, p.d250 ? '$250 off' : null].filter(Boolean).join(' · ')
-    : 'Not offered on this package';
 
-  [['#r-duo', fine.duo && duoOK], ['#r-show', fine.show && showOK], ['#r-card', fine.card]]
+  [['#r-duo', fine.duo && duoOK], ['#r-card', fine.card]]
     .forEach(([sel, on]) => $(sel).setAttribute('aria-pressed', String(on)));
   $$('.pws-pill').forEach(b => b.setAttribute('aria-pressed', String(fine.pws === b.dataset.pws)));
 
   const lines = [[`${p.name} · up to ${p.hours} hrs`, fmt(p.price)]];
   if (r.extraFee) lines.push([`${r.extra} additional hour${r.extra > 1 ? 's' : ''}`, fmt(r.extraFee)]);
   if (r.pwsFee)   lines.push([`Pre-wedding shoot · ${PWS_LABEL[fine.pws]}`, fmt(r.pwsFee)]);
-  if (r.d5)       lines.push(['Showcase 5% off', '−' + fmt(r.d5)]);
-  if (r.d250)     lines.push(['$250 showcase discount', '−' + fmt(r.d250)]);
   if (r.card)     lines.push(['Credit card fee · 3.4%', '+' + fmt(r.card)]);
 
   $('#r-lines').innerHTML = lines.map(([k, v]) => {
@@ -1132,7 +1099,6 @@ function rowHTML(p) {
       </span>
       <span class="text-right shrink-0">
         <span class="block text-lg font-light">${fmt(p.price)}</span>
-        ${showcaseOffer(p) ? `<span class="block text-[9px] font-bold uppercase tracking-widest text-sage mt-0.5">${fmt(showcasePrice(p))} at showcase</span>` : ''}
       </span>
       <span class="pkg-icon text-lg leading-none text-sage shrink-0" aria-hidden="true">+</span>
     </button>
@@ -1197,7 +1163,6 @@ function renderIncPanel() {
     ['Crew', crewText(p)],
     ...(p.extras.includes('1 Location') ? [['Locations', 'One']] : []),
     ['Investment', fmt(p.price)],
-    ['At the showcase', showcaseOffer(p) ? fmt(showcasePrice(p)) : '—'],
   ].map(([k, v]) => `
     <div class="flex items-baseline justify-between gap-4 py-2 border-b border-stone-100 last:border-0">
       <dt class="text-xs text-stone-500">${k}</dt>
@@ -1218,11 +1183,6 @@ function renderIncPanel() {
     ['Splittable over two days', p.extras.includes('Splittable over 2 days')],
   ]);
 
-  const showcase = ticks([
-    ['5% off the package', p.d5],
-    ['$250 off the package', p.d250],
-  ]);
-
   $('#inc-panel').innerHTML = `
     <h2 class="font-serif text-2xl leading-tight mb-1">${p.name}</h2>
     <p class="text-[10px] uppercase tracking-widest text-stone-400 mb-6">${p.tag} · ${KIND_STUDIO[p.kind]}</p>
@@ -1230,9 +1190,7 @@ function renderIncPanel() {
     ${p.kind !== 'video' ? rows('Photography', PHOTO_ROWS, p.photo) : ''}
     ${p.kind !== 'photo' ? rows('Film', FILM_ROWS, p.film) : ''}
     <p class="text-[9px] font-bold uppercase tracking-widest text-sage mt-7 mb-1">The day</p>
-    <div>${day}</div>
-    <p class="text-[9px] font-bold uppercase tracking-widest text-sage mt-7 mb-1">Hitcheed showcase offers</p>
-    <div>${showcase}</div>`;
+    <div>${day}</div>`;
 }
 
 $$('.inc-cat').forEach(btn => btn.addEventListener('click', () => {
