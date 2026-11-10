@@ -414,14 +414,17 @@
         <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-sage mb-2">Natsuku · Photography</p>
         <h2 class="font-serif text-2xl md:text-3xl leading-snug mb-3">Corporate &amp; events</h2>
         <p class="text-xs text-stone-500 italic leading-relaxed max-w-sm mx-auto">
-            Fly-on-the-wall coverage for company events, launches and team days &mdash;
-            the same quiet eye we bring to weddings.
+            Company events, launches and team days &mdash; briefed together on a video call,
+            then photographed with the same quiet eye we bring to weddings.
         </p>
     </div>
 
     <div class="bg-white rounded-[2rem] border border-stone-200 p-7 md:p-9 mb-5">
-        <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-stone-400 mb-2">Rates</p>
-        <div id="corp-rates"></div>
+        <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-stone-400 mb-2">Packages</p>
+        <div id="corp-packages"></div>
+
+        <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-stone-400 mt-8 mb-2">Add-ons</p>
+        <div id="corp-addons"></div>
         <p class="text-[10px] text-stone-400 mt-3 uppercase tracking-widest">All rates in SGD</p>
 
         <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-stone-400 mt-9 mb-4">Payment</p>
@@ -441,8 +444,11 @@
     </div>
 
     <div class="bg-white rounded-[2rem] border border-stone-200 p-7 md:p-9 mb-5">
-        <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-stone-400 mb-5">What you receive</p>
-        <ul id="corp-includes" class="space-y-2.5 text-xs text-stone-600"></ul>
+        <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-stone-400 mb-6">How it works</p>
+        <ol id="corp-steps" class="space-y-6"></ol>
+        <p class="text-[11px] text-stone-400 italic leading-relaxed mt-7 pt-5 border-t border-stone-100">
+            Every photograph is licensed for your organisation&rsquo;s own marketing and internal use.
+        </p>
     </div>
 
     <details class="terms bg-white rounded-[2rem] border border-stone-200 mb-7">
@@ -494,17 +500,20 @@ const CARD_PCT     = 0.034;  // card processing fee, charged on the discounted t
 /* Only used when the page is opened from a file:// path; when it is served the
    QR points at wherever it is actually hosted. */
 const SITE_URL     = 'https://natsukuco.github.io/natsukutwlcollab/';
-/* Corporate — Natsuku photography only, no film */
-const CORP_HOURLY        = 250;    // each hour beyond a block
-const CORP_RATES = [               // [label, length, price]
-  ['Minimum booking',      '2 hours', 500],
-  ['Each additional hour', '',        CORP_HOURLY],
-  ['Half day',             '4 hours', 900],
-  ['Full day',             '8 hours', 1700],
+/* Corporate — Natsuku photography only, no film. Packages are priced by
+   retouched photos: the first sets the rate ($500 for 25, $20 a photo) and the
+   longer ones keep it. */
+const CORP_PACKAGES = [            // [retouched photos, coverage, price]
+  [25, 'Up to 2 hours',            500],
+  [45, 'Half day · up to 4 hours', 900],
+  [85, 'Full day · up to 8 hours', 1700],
 ];
-const CORP_DEPOSIT_PCT   = 0.30;   // secures the date
-const CORP_BALANCE_DAYS  = 14;     // balance due this many days after the shoot
-const CORP_DELIVERY_DAYS = 14;     // Pic-Time gallery delivered within this many days
+const CORP_HOURLY       = 250;     // each hour beyond the booking
+const CORP_EXTRA_PHOTO  = 30;      // each retouched photo beyond the package
+const CORP_EXPRESS      = 250;     // editing returned within 24 hours of the selection
+const CORP_EDIT_DAYS    = 7;       // standard editing, counted from the selection
+const CORP_DEPOSIT_PCT  = 0.30;    // secures the date
+const CORP_BALANCE_DAYS = 14;      // balance due this many days after the shoot
 
 /* the rate card PDF, for couples who want to take it away and decide later */
 const RATE_CARD_URL = 'https://drive.google.com/file/d/1qA7vYu13YQF0fBHz8c6XMIGLbBtwfNn7/view?usp=sharing';
@@ -1308,40 +1317,63 @@ $('#r-incl').addEventListener('click', () => {
    CORPORATE
    ========================================================================== */
 function renderCorporate() {
-  const pct = x => +(x * 100).toFixed(1) + '%';
-
-  $('#corp-rates').innerHTML = CORP_RATES.map(([label, length, price]) => `
+  const pct  = x => +(x * 100).toFixed(1) + '%';
+  const edit = CORP_EDIT_DAYS === 7 ? 'one week' : `${CORP_EDIT_DAYS} days`;
+  const row  = (label, sub, price) => `
     <div class="flex items-center justify-between gap-4 py-3.5 border-b border-stone-100 last:border-0">
       <span>
         <span class="block text-sm">${label}</span>
-        ${length ? `<span class="block text-[10px] uppercase tracking-widest text-stone-400 mt-0.5">${length}</span>` : ''}
+        ${sub ? `<span class="block text-[10px] uppercase tracking-widest text-stone-400 mt-0.5">${sub}</span>` : ''}
       </span>
-      <span class="font-serif text-2xl whitespace-nowrap">${fmt(price)}</span>
-    </div>`).join('');
+      <span class="font-serif text-2xl whitespace-nowrap">${price}</span>
+    </div>`;
+
+  $('#corp-packages').innerHTML = CORP_PACKAGES
+    .map(([photos, cover, price]) => row(`${photos} retouched photos`, cover, fmt(price))).join('');
+
+  $('#corp-addons').innerHTML = [
+    row('Each additional hour',  'More time on the day',      fmt(CORP_HOURLY)),
+    row('Each additional photo', 'Beyond your package',       fmt(CORP_EXTRA_PHOTO)),
+    row('Express editing',       'Delivered within 24 hours', fmt(CORP_EXPRESS)),
+  ].join('');
 
   $('#corp-dep-pct').textContent  = pct(CORP_DEPOSIT_PCT);
   $('#corp-bal-pct').textContent  = pct(1 - CORP_DEPOSIT_PCT);
   $('#corp-bal-when').textContent = `Within ${CORP_BALANCE_DAYS} days after the shoot`;
 
-  const half = CORP_RATES.find(r => r[0] === 'Half day')[2];
-  const dep  = Math.round(half * CORP_DEPOSIT_PCT * 100) / 100;
+  const [photos, , first] = CORP_PACKAGES[0];
+  const dep = Math.round(first * CORP_DEPOSIT_PCT * 100) / 100;
   $('#corp-example').textContent =
-    `A half day, for example, is ${fmt(dep)} to book and ${fmt(half - dep)} after the shoot. ` +
+    `The ${photos}-photo package, for example, is ${fmt(dep)} to book and ${fmt(first - dep)} after the shoot. ` +
     `Card payments add ${pct(CARD_PCT)}.`;
 
-  $('#corp-includes').innerHTML = [
-    'Unlimited edited photographs',
-    'A private Pic-Time gallery to view, share and download',
-    `Delivered within ${CORP_DELIVERY_DAYS} days of the shoot`,
-    'Licensed for your organisation’s own marketing and internal use',
-  ].map(x => `<li class="flex gap-3"><span class="text-gold">✦</span> ${x}</li>`).join('');
+  $('#corp-steps').innerHTML = [
+    ['Deposit',              `A ${pct(CORP_DEPOSIT_PCT)} deposit secures your date.`],
+    ['Video call',           'We talk through art style and direction, so the shoot starts from a shared brief.'],
+    ['Photoshoot',           'We photograph your event or shoot to the brief we agreed.'],
+    ['Your selection',       'We cull the shoot down to the strongest frames, and you choose which ones to have retouched.'],
+    ['Editing and delivery', `${edit[0].toUpperCase() + edit.slice(1)} of editing, then delivery through a private Pic-Time gallery. ` +
+                             `Express editing returns them within 24 hours, for ${fmt(CORP_EXPRESS)}.`],
+  ].map(([h, t], i) => `
+    <li class="flex gap-4">
+      <span class="flex-none w-7 h-7 rounded-full bg-sage text-cream font-serif text-sm flex items-center justify-center" aria-hidden="true">${i + 1}</span>
+      <span>
+        <span class="block text-sm font-semibold text-ink mb-1">${h}</span>
+        <span class="block text-xs text-stone-500 leading-relaxed">${t}</span>
+      </span>
+    </li>`).join('');
 
   $('#corp-terms').innerHTML = [
     ['Booking', `A ${pct(CORP_DEPOSIT_PCT)} deposit secures your date. The deposit is non-refundable.`],
     ['Balance', `The remaining ${pct(1 - CORP_DEPOSIT_PCT)} is due within ${CORP_BALANCE_DAYS} days after the shoot.`],
     ['Card payments', `Credit card payments carry a ${pct(CARD_PCT)} processing fee. Bank transfers carry none.`],
+    ['Direction', 'Art style and direction are agreed on a video call before the shoot, and the editing follows that brief.'],
     ['Coverage', `Coverage runs from the booked start time. Time beyond the booking is charged at ${fmt(CORP_HOURLY)} an hour.`],
-    ['Delivery', `Edited photographs are delivered through a private Pic-Time gallery within ${CORP_DELIVERY_DAYS} days of the shoot, ready to view, share and download.`],
+    ['Selection', `After the shoot we cull the photographs to the strongest frames, and you choose which to have retouched: ` +
+                  `up to your package’s allowance, then ${fmt(CORP_EXTRA_PHOTO)} for each additional photo. ` +
+                  `Only the photographs you select are retouched and delivered.`],
+    ['Delivery', `Editing takes ${edit} from receiving your selection, and the retouched photographs are delivered through a private Pic-Time gallery. ` +
+                 `Express editing, within 24 hours of your selection, is ${fmt(CORP_EXPRESS)}.`],
     ['Usage', 'Natsuku keeps the copyright. Your organisation may use the photographs for its own marketing, communications and internal purposes. Resale, or use in paid third-party advertising, is quoted separately.'],
     ['Portfolio', 'We may feature selected photographs in our portfolio, unless you ask us in writing not to.'],
     ['Changing the date', 'You may move the shoot, subject to availability, and the deposit carries over to the new date.'],
