@@ -48,6 +48,7 @@
         --sage-soft: #6f7c71;
         --mist: #e4e8e2;
         --gold: #9a8471;
+        --gold-deep: #7d6a59;   /* corporate: the gold, deep enough for small text */
     }
     html { scroll-behavior: smooth; }
     body {
@@ -71,6 +72,13 @@
     }
     .tab-btn.is-active { color: var(--sage); }
     .tab-btn.is-active::after { width: 100%; }
+
+    /* Corporate stands apart from the wedding tabs, in the brand's gold */
+    .tab-btn.tab-corp { color: var(--gold-deep); background: rgba(154,132,113,.13); border-radius: .75rem .75rem 0 0;
+                        transition: color .3s ease, background-color .3s ease; }
+    .tab-btn.tab-corp:hover { background: rgba(154,132,113,.22); }
+    .tab-btn.tab-corp::after { background: var(--gold-deep); }
+    .tab-btn.tab-corp.is-active { color: var(--gold-deep); background: rgba(154,132,113,.22); }
     .tab-panel { display: none; }
     .tab-panel.is-active { display: block; animation: riseIn .5s cubic-bezier(.16,1,.3,1) both; }
     @keyframes riseIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
@@ -91,6 +99,9 @@
     .opt:hover { border-color: var(--sage); transform: translateY(-2px); }
     .opt:focus-visible { outline: 2px solid var(--sage); outline-offset: 3px; }
     .opt[aria-pressed="true"] { border-color: var(--sage); background: rgba(74,84,76,.05); }
+    .opt.opt-corp { background: rgba(154,132,113,.08); border-color: rgba(154,132,113,.45); }
+    .opt.opt-corp:hover { border-color: var(--gold-deep); }
+    .opt.opt-corp .opt-label { color: var(--gold-deep); }
     .opt-label { display: block; font-size: .975rem; font-weight: 600; margin-bottom: .2rem; }
     .opt-note  { display: block; font-size: .7rem; color: #8b8f89; line-height: 1.5; }
 
@@ -196,7 +207,7 @@
         <button role="tab" aria-selected="false" aria-controls="takeaway" id="btn-takeaway"
                 class="tab-btn justify-self-center px-2 md:px-4 py-3 text-[10px] md:text-xs font-bold uppercase tracking-[0.12em]">Take home</button>
         <button role="tab" aria-selected="false" aria-controls="corp" id="btn-corp"
-                class="tab-btn justify-self-center px-2 md:px-4 py-3 text-[10px] md:text-xs font-bold uppercase tracking-[0.12em]">Corporate</button>
+                class="tab-btn tab-corp justify-self-center px-3 md:px-4 py-3 text-[10px] md:text-xs font-bold uppercase tracking-[0.12em]">Corporate</button>
     </div>
 </header>
 
@@ -642,6 +653,7 @@ const QUESTIONS = [
       { v:'combo', label:'Photographs and a film', note:'Natsuku × ThroughWebbedLens, working as one team' },
       { v:'photo', label:'Photographs only',       note:'Natsuku' },
       { v:'video', label:'Film only',              note:'ThroughWebbedLens' },
+      { v:'corp',  label:'A corporate shoot or event', note:'Styled shoots and event coverage for businesses, by Natsuku' },
     ]
   },
   {
@@ -977,7 +989,7 @@ function renderQuestion() {
   $('#q-back').classList.toggle('hidden', step === 0);
 
   $('#q-options').innerHTML = q.options.map((o, i) => `
-    <button type="button" class="opt" data-i="${i}" aria-pressed="${String(ans[q.id] === o.v)}">
+    <button type="button" class="opt${o.v === 'corp' ? ' opt-corp' : ''}" data-i="${i}" aria-pressed="${String(ans[q.id] === o.v)}">
       <span class="opt-label">${o.label}</span>
       <span class="opt-note">${o.note}</span>
     </button>`).join('');
@@ -994,6 +1006,8 @@ function renderQuestion() {
 }
 
 function answer(q, v) {
+  /* business clients leave the wedding questions here, for their own tab */
+  if (q.id === 'kind' && v === 'corp') { $('#btn-corp').click(); return; }
   ans[q.id] = v;
   // a shorter day takes the second-shooter question off the table entirely
   if (q.id === 'hours' && v < DUO_FROM) ans.duo = false;
