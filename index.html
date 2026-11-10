@@ -1353,7 +1353,7 @@ function renderCorporate() {
     ['Deposit',              `A ${pct(CORP_DEPOSIT_PCT)} deposit secures your date.`],
     ['Video call',           'We talk through art style and direction, so the shoot starts from a shared brief.'],
     ['Photoshoot',           'We photograph your event or shoot to the brief we agreed.'],
-    ['Your selection',       `We cull the shoot down to the strongest frames, and you have ${CORP_SELECT_DAYS} days to choose which ones to have retouched.`],
+    ['Your selection',       `We cull the shoot down to the strongest frames, and you have ${CORP_SELECT_DAYS} days to choose which ones to have retouched — or we’ll choose for you.`],
     ['Editing and delivery', `${edit[0].toUpperCase() + edit.slice(1)} of editing, then delivery through a private Pic-Time gallery. ` +
                              `Express editing returns them within 24 hours, for ${fmt(CORP_EXPRESS)}.`],
   ].map(([h, t], i) => `
@@ -1374,7 +1374,8 @@ function renderCorporate() {
                  `and each extra hour adds ${CORP_HOUR_PHOTOS} retouched photos to your allowance.`],
     ['Selection', `After the shoot we cull the photographs to the strongest frames. You have ${CORP_SELECT_DAYS} days from receiving them ` +
                   `to choose which to have retouched: your package’s allowance, plus ${CORP_HOUR_PHOTOS} for each additional hour, ` +
-                  `then ${fmt(CORP_EXTRA_PHOTO)} for each further photo. Only the photographs you select are retouched and delivered.`],
+                  `then ${fmt(CORP_EXTRA_PHOTO)} for each further photo. Only the photographs you select are retouched and delivered. ` +
+                  `If we haven’t received your selection within ${CORP_SELECT_DAYS} days, we’ll make it for you, and editing begins from there.`],
     ['Delivery', `Editing takes ${edit} from receiving your selection, and the retouched photographs are delivered through a private Pic-Time gallery. ` +
                  `Express editing, within 24 hours of your selection, is ${fmt(CORP_EXPRESS)}.`],
     ['Usage', 'Natsuku keeps the copyright. Your organisation may use the photographs for its own marketing, communications and internal purposes. Resale, or use in paid third-party advertising, is quoted separately.'],
