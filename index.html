@@ -534,8 +534,11 @@ const CORP_BALANCE_DAYS = 14;      // balance due this many days after the shoot
    additional hours at the same rate as weddings. Derived from PACKAGES, so it
    follows any wedding price change. */
 const CORP_EVENT_DISCOUNT = 0.05;
+const CORP_EVENT_HOURS    = [3, 6, 9];     // the lengths offered for events
+const CORP_EVENT_SECOND   = 50;            // an additional photographer, per hour of coverage
 const CORP_EVENT_WEEKS    = '1–2 weeks';   // event galleries, counted from the event
-const corpEventPackages = () => PACKAGES.filter(p => p.kind === 'photo').map(p => ({
+const corpEventPackages = () => PACKAGES.filter(p =>
+    p.kind === 'photo' && p.pg === 1 && CORP_EVENT_HOURS.includes(p.hours)).map(p => ({
   hours: p.hours, crew: p.pg, hourly: p.hr,
   /* to the cent first, so floating-point noise can never round up an extra dollar */
   price: Math.ceil(Math.round(p.price * (1 - CORP_EVENT_DISCOUNT) * 100) / 100),
@@ -1426,6 +1429,8 @@ function renderCorporate() {
     .map(e => row(`${e.hours} hours of coverage`, `${e.crew} photographer${e.crew > 1 ? 's' : ''}`, fmt(e.price))).join('');
   $('#corp-ev-addons').innerHTML = [
     row('Each additional hour', 'More time on the day', fmt(ev[0].hourly)),
+    row('Additional photographer', 'For every hour of coverage',
+        `${fmt(CORP_EVENT_SECOND)}<span class="text-sm text-stone-400">/hr</span>`),
     expressRow,
   ].join('');
   $('#corp-events-pay').innerHTML = pay(ev[0].price, `${ev[0].hours} hours of coverage`);
@@ -1460,6 +1465,8 @@ function renderCorporate() {
       ['Photographs and delivery', `Event coverage includes unlimited edited photographs. There’s no selection to make: every photograph we keep ` +
                                    `is edited and delivered through a private Pic-Time gallery within ${CORP_EVENT_WEEKS} of the event. ` +
                                    `Express editing, within 24 hours of the event, is ${fmt(CORP_EXPRESS)}.`],
+      ['Additional photographer', `A second photographer is ${fmt(CORP_EVENT_SECOND)} an hour, charged for every hour of coverage, ` +
+                                  `including any time beyond the booking.`],
     ]],
   ];
   let n = 1;
