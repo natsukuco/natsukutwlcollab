@@ -457,8 +457,11 @@
             <div id="corp-events-pay"></div>
         </div>
         <div class="bg-white rounded-[2rem] border border-stone-200 p-7 md:p-9 mb-5">
-            <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-stone-400 mb-5">What you receive</p>
-            <ul id="corp-ev-includes" class="space-y-2.5 text-xs text-stone-600"></ul>
+            <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-stone-400 mb-6">How it works</p>
+            <ol id="corp-ev-steps" class="space-y-6"></ol>
+            <p class="text-[11px] text-stone-400 italic leading-relaxed mt-7 pt-5 border-t border-stone-100">
+                Every photograph is licensed for your organisation&rsquo;s own marketing and internal use.
+            </p>
         </div>
     </div>
 
@@ -527,12 +530,15 @@ const CORP_DEPOSIT_PCT  = 0.30;    // secures the date
 const CORP_BALANCE_DAYS = 14;      // balance due this many days after the shoot
 
 /* Event coverage: unlimited edited photographs, priced 5% below the wedding
-   photography package of the same length, with additional hours at the same
-   rate as weddings. Derived from PACKAGES, so it follows any wedding price change. */
+   photography package of the same length and rounded up to the dollar, with
+   additional hours at the same rate as weddings. Derived from PACKAGES, so it
+   follows any wedding price change. */
 const CORP_EVENT_DISCOUNT = 0.05;
+const CORP_EVENT_WEEKS    = '1–2 weeks';   // event galleries, counted from the event
 const corpEventPackages = () => PACKAGES.filter(p => p.kind === 'photo').map(p => ({
   hours: p.hours, crew: p.pg, hourly: p.hr,
-  price: Math.round(p.price * (1 - CORP_EVENT_DISCOUNT) * 100) / 100,
+  /* to the cent first, so floating-point noise can never round up an extra dollar */
+  price: Math.ceil(Math.round(p.price * (1 - CORP_EVENT_DISCOUNT) * 100) / 100),
 }));
 
 /* the rate card PDF, for couples who want to take it away and decide later */
@@ -1384,26 +1390,7 @@ function renderCorporate() {
       <p class="text-xs text-stone-500 italic leading-relaxed mt-4">${what}, for example, is ${fmt(dep)} to book and ` +
       `${fmt(price - dep)} after the shoot. Card payments add ${pct(CARD_PCT)}.</p>`;
   };
-
-  /* ---- styled shoots ---- */
-  $('#corp-packages').innerHTML = CORP_PACKAGES
-    .map(([photos, cover, price]) => row(`${photos} retouched photos`, cover, fmt(price))).join('');
-  $('#corp-addons').innerHTML = [
-    row('Each additional hour',  `Includes ${CORP_HOUR_PHOTOS} retouched photos`, fmt(CORP_HOURLY)),
-    row('Each additional photo', 'Beyond those included',     fmt(CORP_EXTRA_PHOTO)),
-    row('Express editing',       'Delivered within 24 hours', fmt(CORP_EXPRESS)),
-  ].join('');
-  const [photos, , first] = CORP_PACKAGES[0];
-  $('#corp-styled-pay').innerHTML = pay(first, `The ${photos}-photo package`);
-
-  $('#corp-steps').innerHTML = [
-    ['Deposit',              `A ${pct(CORP_DEPOSIT_PCT)} deposit secures your date.`],
-    ['Video call',           'We talk through art style and direction, so the shoot starts from a shared brief.'],
-    ['Photoshoot',           'We photograph your event or shoot to the brief we agreed.'],
-    ['Your selection',       `We cull the shoot down to the strongest frames, and you have ${CORP_SELECT_DAYS} days to choose which ones to have retouched — or we’ll choose for you.`],
-    ['Editing and delivery', `${edit[0].toUpperCase() + edit.slice(1)} of editing, then delivery through a private Pic-Time gallery. ` +
-                             `Express editing returns them within 24 hours, for ${fmt(CORP_EXPRESS)}.`],
-  ].map(([h, t], i) => `
+  const steps = list => list.map(([h, t], i) => `
     <li class="flex gap-4">
       <span class="flex-none w-7 h-7 rounded-full bg-sage text-cream font-serif text-sm flex items-center justify-center" aria-hidden="true">${i + 1}</span>
       <span>
@@ -1411,18 +1398,43 @@ function renderCorporate() {
         <span class="block text-xs text-stone-500 leading-relaxed">${t}</span>
       </span>
     </li>`).join('');
+  const deposit = ['Deposit', `A ${pct(CORP_DEPOSIT_PCT)} deposit secures your date.`];
+  const express = `Express editing returns them within 24 hours, for ${fmt(CORP_EXPRESS)}.`;
+  const expressRow = row('Express editing', 'Delivered within 24 hours', fmt(CORP_EXPRESS));
 
-  /* ---- event coverage ---- */
+  /* ---- styled shoots ---- */
+  $('#corp-packages').innerHTML = CORP_PACKAGES
+    .map(([photos, cover, price]) => row(`${photos} retouched photos`, cover, fmt(price))).join('');
+  $('#corp-addons').innerHTML = [
+    row('Each additional hour',  `Includes ${CORP_HOUR_PHOTOS} retouched photos`, fmt(CORP_HOURLY)),
+    row('Each additional photo', 'Beyond those included', fmt(CORP_EXTRA_PHOTO)),
+    expressRow,
+  ].join('');
+  const [photos, , first] = CORP_PACKAGES[0];
+  $('#corp-styled-pay').innerHTML = pay(first, `The ${photos}-photo package`);
+  $('#corp-steps').innerHTML = steps([
+    deposit,
+    ['Video call',           'We talk through art style and direction, so the shoot starts from a shared brief.'],
+    ['Photoshoot',           'We photograph your shoot to the brief we agreed.'],
+    ['Your selection',       `We cull the shoot down to the strongest frames, and you have ${CORP_SELECT_DAYS} days to choose which ones to have retouched — or we’ll choose for you.`],
+    ['Editing and delivery', `${edit[0].toUpperCase() + edit.slice(1)} of editing, then delivery through a private Pic-Time gallery. ${express}`],
+  ]);
+
+  /* ---- event coverage: no selection, every photograph we keep is edited ---- */
   const ev = corpEventPackages();
   $('#corp-ev-packages').innerHTML = ev
     .map(e => row(`${e.hours} hours of coverage`, `${e.crew} photographer${e.crew > 1 ? 's' : ''}`, fmt(e.price))).join('');
-  $('#corp-ev-addons').innerHTML = row('Each additional hour', 'More time on the day', fmt(ev[0].hourly));
+  $('#corp-ev-addons').innerHTML = [
+    row('Each additional hour', 'More time on the day', fmt(ev[0].hourly)),
+    expressRow,
+  ].join('');
   $('#corp-events-pay').innerHTML = pay(ev[0].price, `${ev[0].hours} hours of coverage`);
-  $('#corp-ev-includes').innerHTML = [
-    'Unlimited edited photographs',
-    'A private Pic-Time gallery to view, share and download',
-    'Licensed for your organisation’s own marketing and internal use',
-  ].map(x => `<li class="flex gap-3"><span class="text-gold">✦</span> ${x}</li>`).join('');
+  $('#corp-ev-steps').innerHTML = steps([
+    deposit,
+    ['Video call',           'We talk through art style and direction, so the day starts from a shared brief.'],
+    ['The event',            'We photograph the day as it unfolds, to the brief we agreed.'],
+    ['Editing and delivery', `Unlimited edited photographs, delivered through a private Pic-Time gallery within ${CORP_EVENT_WEEKS}. ${express}`],
+  ]);
 
   /* ---- terms: shared first, then each offering's own; numbering runs on ---- */
   const groups = [
@@ -1430,13 +1442,13 @@ function renderCorporate() {
       ['Booking', `A ${pct(CORP_DEPOSIT_PCT)} deposit secures your date. The deposit is non-refundable.`],
       ['Balance', `The remaining ${pct(1 - CORP_DEPOSIT_PCT)} is due within ${CORP_BALANCE_DAYS} days after the shoot.`],
       ['Card payments', `Credit card payments carry a ${pct(CARD_PCT)} processing fee. Bank transfers carry none.`],
+      ['Direction', 'Art style and direction are agreed on a video call before the shoot, and the editing follows that brief.'],
       ['Coverage', `Coverage runs from the booked start time. Time beyond the booking is charged at ${fmt(CORP_HOURLY)} an hour.`],
       ['Usage', 'Natsuku keeps the copyright. Your organisation may use the photographs for its own marketing, communications and internal purposes. Resale, or use in paid third-party advertising, is quoted separately.'],
       ['Portfolio', 'We may feature selected photographs in our portfolio, unless you ask us in writing not to.'],
       ['Changing the date', 'You may move the shoot, subject to availability, and the deposit carries over to the new date.'],
     ]],
     ['Styled shoots', [
-      ['Direction', 'Art style and direction are agreed on a video call before the shoot, and the editing follows that brief.'],
       ['Selection', `After the shoot we cull the photographs to the strongest frames. You have ${CORP_SELECT_DAYS} days from receiving them ` +
                     `to choose which to have retouched: your package’s allowance, plus ${CORP_HOUR_PHOTOS} for each additional hour, ` +
                     `then ${fmt(CORP_EXTRA_PHOTO)} for each further photo. Only the photographs you select are retouched and delivered. ` +
@@ -1445,7 +1457,9 @@ function renderCorporate() {
                    `Express editing, within 24 hours of your selection, is ${fmt(CORP_EXPRESS)}.`],
     ]],
     ['Event coverage', [
-      ['Photographs', 'Event coverage includes unlimited edited photographs, delivered through a private Pic-Time gallery.'],
+      ['Photographs and delivery', `Event coverage includes unlimited edited photographs. There’s no selection to make: every photograph we keep ` +
+                                   `is edited and delivered through a private Pic-Time gallery within ${CORP_EVENT_WEEKS} of the event. ` +
+                                   `Express editing, within 24 hours of the event, is ${fmt(CORP_EXPRESS)}.`],
     ]],
   ];
   let n = 1;
