@@ -508,8 +508,10 @@ const CORP_PACKAGES = [            // [retouched photos, coverage, price]
   [45, 'Half day · up to 4 hours', 900],
   [85, 'Full day · up to 8 hours', 1700],
 ];
-const CORP_HOURLY       = 250;     // each hour beyond the booking
-const CORP_EXTRA_PHOTO  = 30;      // each retouched photo beyond the package
+const CORP_HOURLY       = 250;     // each hour beyond the booking...
+const CORP_HOUR_PHOTOS  = 12;      // ...which adds this many retouched photos
+const CORP_EXTRA_PHOTO  = 30;      // each retouched photo beyond those included
+const CORP_SELECT_DAYS  = 14;      // to choose, from receiving the culled frames
 const CORP_EXPRESS      = 250;     // editing returned within 24 hours of the selection
 const CORP_EDIT_DAYS    = 7;       // standard editing, counted from the selection
 const CORP_DEPOSIT_PCT  = 0.30;    // secures the date
@@ -1332,8 +1334,8 @@ function renderCorporate() {
     .map(([photos, cover, price]) => row(`${photos} retouched photos`, cover, fmt(price))).join('');
 
   $('#corp-addons').innerHTML = [
-    row('Each additional hour',  'More time on the day',      fmt(CORP_HOURLY)),
-    row('Each additional photo', 'Beyond your package',       fmt(CORP_EXTRA_PHOTO)),
+    row('Each additional hour',  `Includes ${CORP_HOUR_PHOTOS} retouched photos`, fmt(CORP_HOURLY)),
+    row('Each additional photo', 'Beyond those included',     fmt(CORP_EXTRA_PHOTO)),
     row('Express editing',       'Delivered within 24 hours', fmt(CORP_EXPRESS)),
   ].join('');
 
@@ -1351,7 +1353,7 @@ function renderCorporate() {
     ['Deposit',              `A ${pct(CORP_DEPOSIT_PCT)} deposit secures your date.`],
     ['Video call',           'We talk through art style and direction, so the shoot starts from a shared brief.'],
     ['Photoshoot',           'We photograph your event or shoot to the brief we agreed.'],
-    ['Your selection',       'We cull the shoot down to the strongest frames, and you choose which ones to have retouched.'],
+    ['Your selection',       `We cull the shoot down to the strongest frames, and you have ${CORP_SELECT_DAYS} days to choose which ones to have retouched.`],
     ['Editing and delivery', `${edit[0].toUpperCase() + edit.slice(1)} of editing, then delivery through a private Pic-Time gallery. ` +
                              `Express editing returns them within 24 hours, for ${fmt(CORP_EXPRESS)}.`],
   ].map(([h, t], i) => `
@@ -1368,10 +1370,11 @@ function renderCorporate() {
     ['Balance', `The remaining ${pct(1 - CORP_DEPOSIT_PCT)} is due within ${CORP_BALANCE_DAYS} days after the shoot.`],
     ['Card payments', `Credit card payments carry a ${pct(CARD_PCT)} processing fee. Bank transfers carry none.`],
     ['Direction', 'Art style and direction are agreed on a video call before the shoot, and the editing follows that brief.'],
-    ['Coverage', `Coverage runs from the booked start time. Time beyond the booking is charged at ${fmt(CORP_HOURLY)} an hour.`],
-    ['Selection', `After the shoot we cull the photographs to the strongest frames, and you choose which to have retouched: ` +
-                  `up to your package’s allowance, then ${fmt(CORP_EXTRA_PHOTO)} for each additional photo. ` +
-                  `Only the photographs you select are retouched and delivered.`],
+    ['Coverage', `Coverage runs from the booked start time. Time beyond the booking is charged at ${fmt(CORP_HOURLY)} an hour, ` +
+                 `and each extra hour adds ${CORP_HOUR_PHOTOS} retouched photos to your allowance.`],
+    ['Selection', `After the shoot we cull the photographs to the strongest frames. You have ${CORP_SELECT_DAYS} days from receiving them ` +
+                  `to choose which to have retouched: your package’s allowance, plus ${CORP_HOUR_PHOTOS} for each additional hour, ` +
+                  `then ${fmt(CORP_EXTRA_PHOTO)} for each further photo. Only the photographs you select are retouched and delivered.`],
     ['Delivery', `Editing takes ${edit} from receiving your selection, and the retouched photographs are delivered through a private Pic-Time gallery. ` +
                  `Express editing, within 24 hours of your selection, is ${fmt(CORP_EXPRESS)}.`],
     ['Usage', 'Natsuku keeps the copyright. Your organisation may use the photographs for its own marketing, communications and internal purposes. Resale, or use in paid third-party advertising, is quoted separately.'],
